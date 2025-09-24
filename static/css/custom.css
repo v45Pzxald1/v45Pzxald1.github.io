@@ -1,0 +1,392 @@
+/* ========= 正文字体设置 ========= */
+.reveal {
+  font-size: clamp(22px, 2.5vw, 30px);  /* 主体字体自动缩放，最大30px */
+  line-height: 1.8;
+  color: #000;
+  background-color: #fff;
+  text-align: left;
+  font-family: "Microsoft YaHei", "微软雅黑", "Times New Roman", Times, serif;
+}
+
+/* ========= 标题样式优化 ========= */
+.reveal h1, .reveal h2, .reveal h3 {
+  font-family: "Microsoft YaHei", "微软雅黑", "Times New Roman", Times, serif;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 0.4em;
+  text-align: center;
+}
+.reveal h1 { font-size: clamp(2.4rem, 6vw, 4rem); }  /* 更合理的最大字号 */
+.reveal h2 { font-size: clamp(2rem, 5vw, 3.4rem); }
+.reveal h3 { font-size: clamp(1.6rem, 4vw, 2.6rem); }
+
+.reveal h4 { display: none; }
+
+/* ========= 列表样式 ========= */
+.reveal ul, .reveal ol {
+  margin-left: 1.2em;
+  padding-left: 0.5em;
+}
+.reveal ul li, .reveal ol li {
+  margin-bottom: 0.4em;
+  font-size: 1.05em;
+}
+
+/* ========= 行内代码 ========= */
+.reveal code {
+  font-family: "Consolas", "Courier New", monospace;
+  background-color: #e7f0f9;              /* 更柔和的蓝色背景 */
+  color: #000;
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+  font-size: 0.95em;
+}
+
+/* ========= 多行代码块 ========= */
+.reveal pre code {
+  font-family: "Consolas", "Courier New", monospace;
+  background-color: #eef6fb;              /* 淡蓝背景 */
+  color: #000;
+  padding: 1em;
+  border-left: 4px solid #007ACC;         /* 蓝色强调线 */
+  border-radius: 4px;
+  line-height: 1.5;
+  display: block;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  font-size: 0.95em;
+}
+
+/* —— 封面整体留白 —— */
+.reveal .slides > section:first-of-type {
+  padding-top: 8vh;
+  padding-bottom: 8vh;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #fff;
+}
+
+/* —— 封面标题 —— */
+.reveal section:first-of-type .title {
+  color: #1a1a1a;               /* 深灰稳重 */
+  font-weight: 800;             /* 保持气势 */
+  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+  font-size: clamp(3.5rem, 8vw, 6rem) !important;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.12em;       /* 从  -0.01em 调整到 0.12em */
+  line-height: 1.05;
+  margin: 2em 0 0;              /* 向下微调 */
+}
+
+
+
+/* —— 标题下方细分割线 —— */
+.reveal section:first-of-type .title::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 2px;
+  background-color: #e0e0e0;                       /* 轻灰分割线 */
+  margin: 0.8em auto 0;
+  border-radius: 1px;
+}
+
+/* —— 作者，次一级信息 —— */
+.reveal section:first-of-type .author {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(18px, 1.8vw, 24px) !important;
+  font-weight: 400;                                /* 纤细常规体 */
+  color: #333;                                     /* 深灰，不抢眼 */
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+  letter-spacing: 0.03em;
+}
+
+/* —— 日期，最轻信息 —— */
+.reveal section:first-of-type .date {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(14px, 1.4vw, 18px) !important;
+  font-weight: 300;                                /* 轻字重 */
+  color: #666;                                     /* 浅灰 */
+  margin: 0;
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+  font-style: normal;
+}
+
+
+
+
+
+
+/* 确保 reveal 容器作为定位上下文 */
+.reveal {
+  position: relative;
+}
+
+.reveal {
+  position: relative;
+}
+
+.reveal .slides > section:not(:first-of-type)::after {
+  content: "深圳市高级中学 李保成";
+  position: fixed;
+  bottom: 10px;
+  right: 30px;
+  font-size: clamp(14px, 1.5vw, 20px);
+  color: #999;
+  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+
+/* 仅在封面页隐藏：封面页数据状态为 reveal-title-slide */
+.reveal[data-state="reveal-title-slide"] ~ .reveal-footer {
+  display: none;
+}
+
+
+
+/* ========= 全屏流程图容器 ========= */
+.fullgraph-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fullgraph-container svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* ========= 证明块样式 ========= */
+.proof {
+  border-left: 4px solid #3E91D1;         /* 蓝色边框 */
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background-color: #f0f7fc;              /* 轻蓝背景 */
+  position: relative;
+  text-align: left;
+  font-size: clamp(18px, 1.8vw, 24px);    /* 自动缩放 */
+  line-height: 1.7;
+}
+
+.proof-title {
+  text-align: left !important;
+  font-weight: bold;
+  color: #2b5797;                         /* 深蓝标题 */
+  margin-bottom: 0.5rem;
+  font-size: 1.2em;
+  font-family: "Microsoft YaHei", "微软雅黑", "Times New Roman", Times, serif;
+}
+
+.proof-content {
+  line-height: 1.6;
+  font-size: 1.05em;
+  text-align: left;
+  display: inline-block;
+  width: 100%;
+}
+
+.proof-end {
+  text-align: right;
+  font-size: 1.3em;
+  color: #2b5797;
+  margin-top: 0.8rem;
+}
+
+
+/* ========= 自动缩放幻灯片字体类 ========= */
+section.auto-shrink {
+  font-size: clamp(16px, 2vw, 24px);
+  line-height: 1.6;
+}
+
+/* 取消正文居中，封面页除外 */
+.reveal .slides > section:not(:first-of-type) {
+  text-align: left !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+
+/* ========= 提示块样式（绿色主题） ========= */
+.hint {
+  border-left: 4px solid #28a745;      /* 深绿边框 */
+  background-color: #e6f4ea;           /* 浅绿背景 */
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  text-align: left;
+  font-size: clamp(18px, 1.8vw, 24px); /* 自动缩放 */
+  line-height: 1.6;
+}
+.hint-title {
+  font-weight: bold;
+  color: #19692c;                      /* 深绿标题 */
+  margin-bottom: 0.5rem;
+  font-size: 1.2em;
+  font-family: "Microsoft YaHei", "微软雅黑", "Times New Roman", Times, serif;
+}
+.hint-content {
+  font-size: 1.05em;
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* ========= 技巧块样式（橙色主题） ========= */
+.technique {
+  border-left: 4px solid #fd7e14;      /* 深橙边框 */
+  background-color: #fff4e6;           /* 浅橙背景 */
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  text-align: left;
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.6;
+}
+.technique-title {
+  font-weight: bold;
+  color: #b34700;                      /* 深橙标题 */
+  margin-bottom: 0.5rem;
+  font-size: 1.2em;
+  font-family: "Microsoft YaHei", "微软雅黑", "Times New Roman", Times, serif;
+}
+.technique-content {
+  font-size: 1.05em;
+  line-height: 1.6;
+  text-align: left;
+}
+/* ===== Minimal Soft Table Theme ===== */
+:root{
+  /* 颜色 */
+  --tbl-fg: #111;           /* 正文字色 */
+  --tbl-muted: #667085;     /* 次要文字 */
+  --tbl-sep: #E6E8EC;       /* 分隔线 */
+  --tbl-head-bg: #F6F8FB;   /* 表头底色（很浅） */
+  --tbl-zebra: #FBFCFE;     /* 斑马底色（极浅） */
+  --tbl-card: #FFFFFF;      /* 容器背景 */
+
+  /* 圆角与阴影（很轻） */
+  --tbl-radius: 12px;
+  --tbl-shadow: 0 4px 14px rgba(17, 24, 39, .06);
+
+  /* 字体与比例（用 clamp 保证大小在不同屏幕一致、不过分） */
+  --tbl-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --fs-base: clamp(14px, .94vw, 16px);
+  --fs-sm:   clamp(12px, .82vw, 14px);
+  --fs-lg:   clamp(16px, 1.02vw, 18px);
+  --fs-cap:  clamp(15px, 1.06vw, 19px); /* 标题稍大一点 */
+  --line: 1.55;
+
+  /* 间距 */
+  --pad-y: 12px;  /* 单元格上下内边距 */
+  --pad-x: 14px;  /* 左右内边距 */
+
+  /* 尺寸档位（切换类会改它们） */
+  --row-h: 48px;  /* 行高“感知高度” */
+}
+
+/* 尺寸切换：.tbl--compact / .tbl--regular / .tbl--comfort */
+.tbl--compact{ --pad-y: 8px;  --pad-x: 12px; --row-h: 40px; --fs-base: clamp(13px,.9vw,15px); }
+.tbl--regular{ /* 默认 */ }
+.tbl--comfort{ --pad-y: 16px; --pad-x: 18px; --row-h: 56px; --fs-base: clamp(15px,1.02vw,17px); --fs-lg: clamp(17px,1.1vw,19px); }
+
+/* 容器 */
+.tbl {
+  background: var(--tbl-card);
+  border-radius: var(--tbl-radius);
+  box-shadow: var(--tbl-shadow);
+  overflow: hidden; /* 圆角裁切表头背景 */
+  margin: 1.4rem 0;
+}
+
+/* 可横向滚动的包裹层 */
+.tbl__scroller{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-top: 1px solid var(--tbl-sep);
+  border-bottom: 1px solid var(--tbl-sep);
+}
+
+/* 标题与脚注 */
+.tbl__caption{
+  font-family: var(--tbl-font);
+  color: var(--tbl-fg);
+  font-weight: 700;
+  letter-spacing: .2px;
+  padding: .9rem 1rem .6rem 1rem;
+  font-size: var(--fs-cap);
+  line-height: var(--line);
+}
+.tbl__foot{
+  font-family: var(--tbl-font);
+  color: var(--tbl-muted);
+  font-size: var(--fs-sm);
+  padding: .6rem 1rem;
+  text-align: right;
+}
+
+/* 表格本体 */
+.tbl table{
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--tbl-font);
+  font-size: var(--fs-base);
+  line-height: var(--line);
+  color: var(--tbl-fg);
+  background: #fff;
+}
+
+.tbl thead th{
+  background: var(--tbl-head-bg);
+  color: var(--tbl-fg);
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--tbl-sep);
+}
+
+.tbl th, .tbl td{
+  padding: var(--pad-y) var(--pad-x);
+  height: var(--row-h);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--tbl-sep);
+}
+
+.tbl tbody tr:nth-child(even){ background: var(--tbl-zebra); }
+
+/* 轻微悬停：仅桌面 */
+@media (hover:hover){
+  .tbl tbody tr:hover{ background: #F2F5FA; }
+}
+
+/* 右对齐保险：数字列或自动 right style */
+.tbl td[style*="text-align: right"], .tbl td.num, .tbl th.num{
+  text-align: right !important;
+}
+
+/* 粗细与字重优化 */
+.tbl th{ font-size: var(--fs-base); }
+.tbl td{ font-weight: 450; } /* 微粗，便于阅读 */
+
+/* 暗色适配（跟随系统） */
+@media (prefers-color-scheme: dark){
+  :root{
+    --tbl-fg:#EDEEF0; --tbl-muted:#A1A6AE; --tbl-sep:#2C2F36;
+    --tbl-head-bg:#1D2026; --tbl-zebra:#171A1F; --tbl-card:#111418;
+    --tbl-shadow: none;
+  }
+  .tbl tbody tr:hover{ background:#1B1E24; }
+}
+
+/* 打印优化 */
+@media print{
+  .tbl{ box-shadow:none; border:1px solid var(--tbl-sep); }
+  .tbl thead th{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

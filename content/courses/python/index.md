@@ -236,3 +236,6 @@ This still works but is deprecated. Use the Markdown syntax above!
   - Chinese: "注意", "提示", "重要", "警告", "小心"
 
 ## Did you find this page helpful? Consider sharing it 🙌
+
+<!-- 在Markdown中 -->
+[点击查看我的自定义页面](/mypage/index.html){:target="_blank"}
