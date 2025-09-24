@@ -238,4 +238,4 @@ This still works but is deprecated. Use the Markdown syntax above!
 ## Did you find this page helpful? Consider sharing it 🙌
 
 <!-- 在Markdown中 -->
-[点击查看我的自定义页面](/mypage/index.html){:target="_blank"}
+<a href="/1.html" target="_blank">点击查看我的自定义页面</a>
