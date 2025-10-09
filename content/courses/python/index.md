@@ -239,3 +239,5 @@ This still works but is deprecated. Use the Markdown syntax above!
 
 <!-- 在Markdown中 -->
 <a href="/1.html" target="_blank">点击查看我的自定义页面</a>
+<!-- 在Markdown中 -->
+<a href="/1009.html" target="_blank">点击查看我的自定义页面</a>
