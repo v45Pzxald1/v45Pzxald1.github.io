@@ -176,7 +176,7 @@
   line-height: 1.7;
 }
 
-.proof-title {
+.proof .proof-title {
   text-align: left !important;
   font-weight: bold;
   color: #2b5797;                         /* 深蓝标题 */
@@ -226,7 +226,7 @@ section.auto-shrink {
   font-size: clamp(18px, 1.8vw, 24px); /* 自动缩放 */
   line-height: 1.6;
 }
-.hint-title {
+.hint .hint-title {
   font-weight: bold;
   color: #19692c;                      /* 深绿标题 */
   margin-bottom: 0.5rem;
@@ -250,7 +250,7 @@ section.auto-shrink {
   font-size: clamp(18px, 1.8vw, 24px);
   line-height: 1.6;
 }
-.technique-title {
+.technique .technique-title {
   font-weight: bold;
   color: #b34700;                      /* 深橙标题 */
   margin-bottom: 0.5rem;
@@ -389,4 +389,127 @@ section.auto-shrink {
 @media print{
   .tbl{ box-shadow:none; border:1px solid var(--tbl-sep); }
   .tbl thead th{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+/* ===== 最终版：白条标题 + 左侧竖线颜色区分 ===== */
+
+/* 基础变量 */
+:root {
+  --qa-accent: #3E91D1;   /* 蓝 - 题目 */
+  --qa-solve:  #28a745;   /* 绿 - 题解 */
+  --qa-bg:     #f9fbfd;
+  --qa-bg-sol: #f8fbf9;
+  --qa-sep:    #E6E8EC;
+  --qa-radius: 12px;
+  --qa-shadow: 0 3px 10px rgba(17,24,39,.05);
+}
+
+/* 自动编号 */
+.reveal .slides { counter-reset: qa 0; }
+.reveal .problem { counter-increment: qa; }
+
+/* 通用容器 */
+.reveal .problem,
+.reveal .solution {
+  position: relative;
+  border-radius: var(--qa-radius);
+  box-shadow: var(--qa-shadow);
+  margin: 1rem 0;
+  line-height: 1.55;
+  font-size: clamp(17px, 1.6vw, 22px);
+  border: 1px solid var(--qa-sep);
+  overflow: hidden;
+}
+
+/* === 题目块 === */
+.reveal .problem {
+  background: var(--qa-bg);
+  border-left: 6px solid var(--qa-accent);
+}
+.reveal .problem::before {
+  content: "题目 " counter(qa);
+  display: block;
+  background: var(--qa-bg);
+  color: var(--qa-accent);
+  font-weight: 700;
+  font-size: 0.95em;
+  padding: 0.25em 0.9em 0.15em;   /* ← 减小上下padding：原 0.35em → 0.25/0.15 */
+  border-top-left-radius: var(--qa-radius);
+  width: calc(100% + 8px);
+  margin-left: -8px;
+  box-sizing: border-box;
+}
+
+.reveal .problem > * {
+  padding: 0.4em 1em 0.8em 1em;   /* ← 上间距由 0.6em 调为 0.4em */
+  margin: 0;
+}
+
+
+/* === 题解块 === */
+.reveal .solution {
+  background: var(--qa-bg-sol);
+  border-left: 6px solid var(--qa-solve);
+}
+.reveal .solution::before {
+  content: "题解 " counter(qa);
+  display: block;
+  background: var(--qa-bg-sol);                 /* ← 白底 */
+  color: var(--qa-solve);           /* ← 绿色文字 */
+  font-weight: 700;
+  font-size: 0.95em;
+  padding: 0.35em 0.9em;
+  border-top-left-radius: var(--qa-radius);
+  width: calc(100% + 8px);
+  margin-left: -8px;
+  box-sizing: border-box;
+}
+.reveal .solution > * {
+  padding: 0.6em 1em 0.8em 1em;
+  margin: 0;
+}
+
+/* === 答案高亮 === */
+.reveal .answer {
+  display: inline-block;
+  background: #fff;
+  border: 2px solid var(--qa-solve);
+  color: var(--qa-solve);
+  padding: 0.05em 0.45em;
+  border-radius: 0.4em;
+  font-weight: 700;
+  font-size: 1.05em;
+}
+
+/* === 暗色模式 === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --qa-bg:#111418; --qa-bg-sol:#101812; --qa-sep:#2C2F36;
+    --qa-shadow:none;
+  }
+  .reveal .problem::before,
+  .reveal .solution::before {
+    background: #1b1b1b;
+  }
+}
+
+/* === 打印优化 === */
+@media print {
+  .reveal .problem, .reveal .solution {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
+/* ===== 修复 1. 2. 列表左侧太靠边的问题 ===== */
+.reveal .problem ol,
+.reveal .solution ol {
+  margin-left: 1.5em !important;  /* 控制左缩进 */
+  padding-left: 1.5em !important;
+  list-style-position: outside;   /* 数字在内容外侧（更整齐） */
+}
+
+.reveal .problem ul,
+.reveal .solution ul {
+  margin-left: 1.5em !important;
+  padding-left: 1.5em !important;
+  list-style-position: outside;
 }
