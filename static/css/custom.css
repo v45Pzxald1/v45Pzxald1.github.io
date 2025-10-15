@@ -262,59 +262,60 @@ section.auto-shrink {
   line-height: 1.6;
   text-align: left;
 }
-/* ===== Minimal Soft Table Theme ===== */
+
+
+/* ===== Minimal Soft Table Theme（修正版）===== */
 :root{
   /* 颜色 */
   --tbl-fg: #111;           /* 正文字色 */
   --tbl-muted: #667085;     /* 次要文字 */
-  --tbl-sep: #E6E8EC;       /* 分隔线 */
-  --tbl-head-bg: #F6F8FB;   /* 表头底色（很浅） */
-  --tbl-zebra: #FBFCFE;     /* 斑马底色（极浅） */
+  --tbl-sep: #E6E8EC;       /* 分隔线（明确实线颜色） */
+  --tbl-head-bg: #F6F8FB;   /* 表头底色 */
+  --tbl-zebra: #FBFCFE;     /* 斑马底色 */
   --tbl-card: #FFFFFF;      /* 容器背景 */
 
-  /* 圆角与阴影（很轻） */
+  /* 圆角与阴影 */
   --tbl-radius: 12px;
   --tbl-shadow: 0 4px 14px rgba(17, 24, 39, .06);
 
-  /* 字体与比例（用 clamp 保证大小在不同屏幕一致、不过分） */
+  /* 字体与比例 */
   --tbl-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
   --fs-base: clamp(14px, .94vw, 16px);
   --fs-sm:   clamp(12px, .82vw, 14px);
   --fs-lg:   clamp(16px, 1.02vw, 18px);
-  --fs-cap:  clamp(15px, 1.06vw, 19px); /* 标题稍大一点 */
+  --fs-cap:  clamp(15px, 1.06vw, 19px);
   --line: 1.55;
 
   /* 间距 */
-  --pad-y: 12px;  /* 单元格上下内边距 */
-  --pad-x: 14px;  /* 左右内边距 */
+  --pad-y: 12px;
+  --pad-x: 14px;
 
-  /* 尺寸档位（切换类会改它们） */
-  --row-h: 48px;  /* 行高“感知高度” */
+  /* 尺寸档位 */
+  --row-h: 48px;
 }
 
-/* 尺寸切换：.tbl--compact / .tbl--regular / .tbl--comfort */
+/* 尺寸切换类 */
 .tbl--compact{ --pad-y: 8px;  --pad-x: 12px; --row-h: 40px; --fs-base: clamp(13px,.9vw,15px); }
 .tbl--regular{ /* 默认 */ }
 .tbl--comfort{ --pad-y: 16px; --pad-x: 18px; --row-h: 56px; --fs-base: clamp(15px,1.02vw,17px); --fs-lg: clamp(17px,1.1vw,19px); }
 
-/* 容器 */
+/* 容器（添加整体边框确保实线） */
 .tbl {
   background: var(--tbl-card);
   border-radius: var(--tbl-radius);
   box-shadow: var(--tbl-shadow);
-  overflow: hidden; /* 圆角裁切表头背景 */
+  overflow: hidden;
   margin: 1.4rem 0;
+  border: 1px solid var(--tbl-sep); /* 外层实线边框 */
 }
 
-/* 可横向滚动的包裹层 */
+/* 横向滚动层 */
 .tbl__scroller{
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-top: 1px solid var(--tbl-sep);
-  border-bottom: 1px solid var(--tbl-sep);
 }
 
-/* 标题与脚注 */
+/* 表标题（强制居中） */
 .tbl__caption{
   font-family: var(--tbl-font);
   color: var(--tbl-fg);
@@ -323,7 +324,10 @@ section.auto-shrink {
   padding: .9rem 1rem .6rem 1rem;
   font-size: var(--fs-cap);
   line-height: var(--line);
+  text-align: center !important; /* 强制标题居中 */
 }
+
+/* 表脚注 */
 .tbl__foot{
   font-family: var(--tbl-font);
   color: var(--tbl-muted);
@@ -343,39 +347,44 @@ section.auto-shrink {
   background: #fff;
 }
 
+/* 表头（强制居中+实线边框） */
 .tbl thead th{
   background: var(--tbl-head-bg);
   color: var(--tbl-fg);
   font-weight: 700;
-  text-align: left;
+  text-align: center !important; /* 强制表头文字居中 */
   white-space: nowrap;
-  border-bottom: 1px solid var(--tbl-sep);
+  border-bottom: 1px solid var(--tbl-sep) !important; /* 强制实线边框 */
+  vertical-align: middle !important; /* 强制垂直居中 */
 }
 
+/* 单元格（强制居中+实线边框） */
 .tbl th, .tbl td{
   padding: var(--pad-y) var(--pad-x);
   height: var(--row-h);
-  vertical-align: middle;
-  border-bottom: 1px solid var(--tbl-sep);
+  vertical-align: middle !important; /* 强制垂直居中 */
+  text-align: center !important; /* 强制水平居中 */
+  border: 1px solid var(--tbl-sep) !important; /* 强制所有边框为实线 */
 }
 
+/* 斑马纹 */
 .tbl tbody tr:nth-child(even){ background: var(--tbl-zebra); }
 
-/* 轻微悬停：仅桌面 */
+/* 桌面端悬停 */
 @media (hover:hover){
   .tbl tbody tr:hover{ background: #F2F5FA; }
 }
 
-/* 右对齐保险：数字列或自动 right style */
+/* 数字列右对齐（特殊场景，不影响整体居中） */
 .tbl td[style*="text-align: right"], .tbl td.num, .tbl th.num{
   text-align: right !important;
 }
 
-/* 粗细与字重优化 */
+/* 字体粗细优化 */
 .tbl th{ font-size: var(--fs-base); }
-.tbl td{ font-weight: 450; } /* 微粗，便于阅读 */
+.tbl td{ font-weight: 450; }
 
-/* 暗色适配（跟随系统） */
+/* 暗色模式适配 */
 @media (prefers-color-scheme: dark){
   :root{
     --tbl-fg:#EDEEF0; --tbl-muted:#A1A6AE; --tbl-sep:#2C2F36;
@@ -390,6 +399,9 @@ section.auto-shrink {
   .tbl{ box-shadow:none; border:1px solid var(--tbl-sep); }
   .tbl thead th{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+
+
 /* ===== 最终版：白条标题 + 左侧竖线颜色区分 ===== */
 
 /* 基础变量 */
@@ -512,4 +524,65 @@ section.auto-shrink {
   margin-left: 1.5em !important;
   padding-left: 1.5em !important;
   list-style-position: outside;
+}
+
+/* 主题句样式 - 适用于Reveal.js的R Markdown */
+/* 使用方式: ::: {.topic-sentence} 你的主题句 ::: */
+
+.topic-sentence {
+  /* 确保占据可用宽度 */
+  width: 100%;
+  box-sizing: border-box;
+  
+  /* 自适应字体大小 - 确保在各种屏幕尺寸下都清晰可见 */
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  
+  /* 主题句强调样式 */
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: left; /* 改为左对齐 */
+  text-indent: 2em; /* 首行空两格（2个汉字宽度） */
+  margin: 1.5em 0; /* 上下边距，左右0保持左对齐 */
+  padding: 0.5em 0; /* 仅上下内边距，左右不额外留白 */
+  
+  /* 视觉突出效果 */
+  color: #2c3e50;
+  letter-spacing: -0.02em;
+  
+  /* 响应式调整 */
+  max-width: 90vw;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 与Reveal.js片段动画兼容 */
+.topic-sentence.fragment {
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.topic-sentence.fragment.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 带背景的变体: 保持左对齐和首行缩进 */
+.topic-sentence.with-bg {
+  background-color: rgba(44, 62, 80, 0.05);
+  border-left: 4px solid #3498db;
+  border-radius: 0 4px 4px 0;
+  padding: 0.5em 1em; /* 带背景时增加左右内边距 */
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .topic-sentence {
+    color: #ecf0f1;
+  }
+  
+  .topic-sentence.with-bg {
+    background-color: rgba(236, 240, 241, 0.05);
+    border-left-color: #3498db;
+  }
 }

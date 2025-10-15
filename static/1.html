@@ -19,8 +19,9 @@
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+            html { -webkit-text-size-adjust: 100%; }
             pre > code.sourceCode { white-space: pre; position: relative; }
-            pre > code.sourceCode > span { line-height: 1.25; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
             pre > code.sourceCode > span:empty { height: 1.2em; }
             .sourceCode { overflow: visible; }
             code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -31,7 +32,7 @@
             }
             @media print {
             pre > code.sourceCode { white-space: pre-wrap; }
-            pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
             }
             pre.numberSource code
               { counter-reset: source-line 0; }
@@ -139,7 +140,7 @@
 <section id="title-slide">
   <h1 class="title">编程如此简单</h1>
   <h2 class="author">李保成</h2>
-  <h3 class="date">2025年10月14日</h3>
+  <h3 class="date">2025年10月15日</h3>
 </section>
 
 <section>
@@ -266,10 +267,10 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 按照计算机语言所对应的规则，对所编写的程序进行解析的过程叫<strong>翻译</strong>。
 翻译可分为两种方式，一种叫<strong>解释</strong>，是计算机对程序的指令翻译一句执行一句的行为，<strong>Python</strong>、<strong>JavaScript</strong>、<strong>MATLAB</strong>等属于解释型语言；另一种叫<strong>编译</strong>，是计算机对程序的全部指令一次性全部翻译后，再让计算机执行的行为，<strong>C</strong>、<strong>C++</strong>、<strong>Go</strong>、<strong>Fortran</strong>、<strong>Rust</strong>等属于编译型语言。</p>
 </div>
-<ul>
-<li>这两种翻译方式哪个运行效率高？</li>
-<li>这两种翻译方式各有什么优点？</li>
-</ul>
+<ol type="1">
+<li><p>这两种翻译方式哪个运行效率高？</p></li>
+<li><p>这两种翻译方式各有什么优点？</p></li>
+</ol>
 </section>
 <section id="程序结构" class="slide level2">
 <h2>程序结构</h2>
@@ -290,8 +291,8 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#c
 <strong>关键字</strong>是被语言设计者预先保留的特殊单词，它们具有固定的语法含义，用于构建程序的基本结构和逻辑。</p>
 </div>
 </section>
-<section id="练习" class="slide level2">
-<h2>练习</h2>
+<section id="程序结构-1" class="slide level2">
+<h2>程序结构</h2>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
@@ -300,10 +301,10 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#c
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Good Luck!&quot;</span><span class="op">);</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<ul>
+<ol type="1">
 <li>使用Dev-C++，运行【例1.1】。</li>
 <li>熟悉程序结构，尝试修改程序。</li>
-</ul>
+</ol>
 </section></section>
 <section>
 <section id="二算数表达式" class="title-slide slide level1">
@@ -320,13 +321,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#c
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="fragment column" style="width:48%;">
-<ul>
-<li>修改【例1.2】，输出<code>3 - 4</code>的结果</li>
-<li>修改【例1.2】，输出<code>3 × 4</code>的结果</li>
-<li>修改【例1.2】，输出<code>8 ÷ 4</code>的结果</li>
-<li>修改【例1.2】，输出<code>8 MOD 5</code>的结果</li>
-<li>修改【例1.2】，输出<code>8 ÷ 5</code>的结果</li>
-</ul>
+<ol type="1">
+<li><p>修改【例1.2】，输出<code>3 - 4</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>3 × 4</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>8 ÷ 4</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>8 MOD 5</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>8 ÷ 5</code>的结果</p></li>
+</ol>
 </div>
 </section>
 <section id="算术运算符" class="slide level2">
@@ -399,11 +400,11 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#c
 </div>
 <div class="fragment column" style="width:48%;">
 <ol type="1">
-<li>修改【例1.2】，输出<code>3 - 4</code>的结果</li>
-<li>修改【例1.2】，输出<code>3 × 4</code>的结果</li>
-<li>修改【例1.2】，输出<code>8 ÷ 4</code>的结果</li>
-<li>修改【例1.2】，输出<code>8 MOD 5</code>的结果</li>
-<li>修改【例1.2】，输出<code>8 ÷ 5</code>的结果</li>
+<li><p>修改【例1.2】，输出<code>3 - 4</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>3 × 4</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>8 ÷ 4</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>8 MOD 5</code>的结果</p></li>
+<li><p>修改【例1.2】，输出<code>8 ÷ 5</code>的结果</p></li>
 </ol>
 </div>
 <div class="fragment">
@@ -427,10 +428,10 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#c
 </div>
 <div class="fragment column" style="width:48%;">
 <ol type="1">
-<li>把<code>%.1f</code>中的数字<code>1</code>修改成<code>2</code>，结果如何？你能猜出<code>1</code>的意思吗？</li>
-<li>把<code>.1</code>删除，只剩下<code>%f</code>，结果如何？<code>%f</code>的含义是什么？</li>
-<li><code>%.1f</code>不变，把<code>8.0 / 5.0</code>改成<code>8/ 5</code>，结果如何？</li>
-<li><code>8.0 / 5.0</code>不变，<code>%.1f</code>改成<code>%d</code>，结果如何</li>
+<li><p>把<code>%.1f</code>中的数字<code>1</code>修改成<code>2</code>，结果如何？你能猜出<code>1</code>的意思吗？</p></li>
+<li><p>把<code>.1</code>删除，只剩下<code>%f</code>，结果如何？<code>%f</code>的含义是什么？</p></li>
+<li><p><code>%.1f</code>不变，把<code>8.0 / 5.0</code>改成<code>8/ 5</code>，结果如何？</p></li>
+<li><p><code>8.0 / 5.0</code>不变，<code>%.1f</code>改成<code>%d</code>，结果如何</p></li>
 </ol>
 </div>
 <div class="fragment">
@@ -443,7 +444,9 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#c
 <section>
 <section id="三变量及其输入" class="title-slide slide level1">
 <h1>三、变量及其输入</h1>
+<div class="topic-sentence with-bg">
 <p>现在计算的数据是事先定好的，可不可以让程序读取<strong>键盘</strong>输入，并根据输入内容计算结果呢？</p>
+</div>
 </section>
 <section id="a-b-问题" class="slide level2">
 <h2>a + b 问题</h2>
@@ -470,7 +473,7 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#c
 <p>【例1.4】输入半径r，求圆的面积，<strong>保留3位小数。</strong></p>
 <pre><code>输入：1
 输出：3.142</code></pre>
-<div class="fragment">
+<div class="fragment column" style="width:48%;">
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
@@ -485,11 +488,70 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#c
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
+<div class="column" style="width:48%;">
+<div class="fragment">
+<div class="hint">
+<p><strong>提示：</strong>
+尽量用<code>const</code>关键字声明常数字。</p>
+</div>
+</div>
+<div class="fragment">
+<div class="hint">
+<p><strong>提示：</strong>
+<code>s = pi * r * r;</code>的含义是先把等号右边的值计算出来，然后赋给左边的变量。变量是喜新厌旧的。</p>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="四顺序结构程序设计" class="title-slide slide level1">
 <h1>四、顺序结构程序设计</h1>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="100%" height="100%">
+  <!-- 定义箭头标记 -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+  </defs>
+  
+  <!-- 步骤1：分析问题（整体上移10） -->
+  <rect x="406" y="30" width="468" height="70" rx="10" ry="10" fill="white" stroke="#000" stroke-width="2.6"/>
+  <text x="640" y="65" font-family="Arial, sans-serif" font-size="31" font-weight="bold" text-anchor="middle" fill="red">一、分析问题</text>
+  <text x="640" y="90" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" fill="#000">(分析已知、未知)</text>
+  
+  <!-- 箭头1-2（间隔保持50px） -->
+  <line x1="640" y1="100" x2="640" y2="150" stroke="#000" stroke-width="2.6" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤2：数据定义 -->
+  <rect x="406" y="150" width="468" height="70" rx="10" ry="10" fill="white" stroke="#000" stroke-width="2.6"/>
+  <text x="640" y="185" font-family="Arial, sans-serif" font-size="31" font-weight="bold" text-anchor="middle" fill="red">二、数据定义</text>
+  <text x="640" y="210" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" fill="#000">(已知未知的取名和类型)</text>
+  
+  <!-- 箭头2-3 -->
+  <line x1="640" y1="220" x2="640" y2="270" stroke="#000" stroke-width="2.6" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤3：数据输入 -->
+  <rect x="406" y="270" width="468" height="70" rx="10" ry="10" fill="white" stroke="#000" stroke-width="2.6"/>
+  <text x="640" y="305" font-family="Arial, sans-serif" font-size="31" font-weight="bold" text-anchor="middle" fill="red">三、数据输入</text>
+  <text x="640" y="330" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" fill="#000">(输入已知)</text>
+  
+  <!-- 箭头3-4 -->
+  <line x1="640" y1="340" x2="640" y2="390" stroke="#000" stroke-width="2.6" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤4：数据计算 -->
+  <rect x="406" y="390" width="468" height="70" rx="10" ry="10" fill="white" stroke="#000" stroke-width="2.6"/>
+  <text x="640" y="425" font-family="Arial, sans-serif" font-size="31" font-weight="bold" text-anchor="middle" fill="red">四、数据计算</text>
+  <text x="640" y="450" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" fill="#000">(①数学建模②设计算法)</text>
+  
+  <!-- 箭头4-5 -->
+  <line x1="640" y1="460" x2="640" y2="510" stroke="#000" stroke-width="2.6" marker-end="url(#arrowhead)"/>
+  
+  <!-- 步骤5：数据输出 -->
+  <rect x="406" y="510" width="468" height="70" rx="10" ry="10" fill="white" stroke="#000" stroke-width="2.6"/>
+  <text x="640" y="545" font-family="Arial, sans-serif" font-size="31" font-weight="bold" text-anchor="middle" fill="red">五、数据输出</text>
+  <text x="640" y="570" font-family="Arial, sans-serif" font-size="21" text-anchor="middle" fill="#000">(输出未知)</text>
+</svg>
+    
 </section>
 <section id="三位数反转" class="slide level2">
 <h2>三位数反转</h2>
@@ -498,9 +560,11 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#c
 输出：321</code></pre>
 <div class="fragment">
 <ol type="1">
-<li>输入是什么？它是什么数据类型？</li>
-<li>三位数如何反转？</li>
-<li>输出是什么？它是什么数据类型？</li>
+<li><p>分析问题。</p></li>
+<li><p>确定已知和未知的取名和类型。</p></li>
+<li><p>输入已知。</p></li>
+<li><p>设计算法解决问题。</p></li>
+<li><p>输出答案（未知）。</p></li>
 </ol>
 </div>
 </section>
@@ -525,6 +589,12 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#
 <li>如何在输出的三个数字中间添加空格？</li>
 <li>题目增加条件：如果输入<code>520</code>时，要求输出<code>25</code>，怎么办？</li>
 </ol>
+</div>
+<div class="fragment">
+<div class="hint">
+<p><strong>提示：</strong>
+<code>printf</code>的格式字符串中可以包含其他可打印符号，打印时原样输出。</p>
+</div>
 </div>
 </section>
 <section id="三位数反转-2" class="slide level2">
@@ -552,6 +622,26 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#
 <section id="交换变量" class="slide level2">
 <h2>交换变量</h2>
 <p>【例1.6】输入两个整数<code>a</code>和<code>b</code>，交换两者的值，然后输出。</p>
+<pre><code>输入：123 456
+输出：456 123</code></pre>
+<details>
+<summary>
+点击展开答案
+</summary>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> t<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">);</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> t<span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">,</span> b<span class="op">);</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</details>
 </section></section>
     </div>
   </div>
