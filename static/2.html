@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="李保成" />
+  <title>判断选择用分支</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/reset.css">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/reveal.css">
+
+  <style type="text/css">
+    /* CSS from pandoc style.html() */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+            html { -webkit-text-size-adjust: 100%; }
+            pre > code.sourceCode { white-space: pre; position: relative; }
+            pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+            pre > code.sourceCode > span:empty { height: 1.2em; }
+            .sourceCode { overflow: visible; }
+            code.sourceCode > span { color: inherit; text-decoration: inherit; }
+            div.sourceCode { margin: 1em 0; }
+            pre.sourceCode { margin: 0; }
+            @media screen {
+            div.sourceCode { overflow: auto; }
+            }
+            @media print {
+            pre > code.sourceCode { white-space: pre-wrap; }
+            pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+            }
+            pre.numberSource code
+              { counter-reset: source-line 0; }
+            pre.numberSource code > span
+              { position: relative; left: -4em; counter-increment: source-line; }
+            pre.numberSource code > span > a:first-child::before
+              { content: counter(source-line);
+                position: relative; left: -1em; text-align: right; vertical-align: baseline;
+                border: none; display: inline-block;
+                -webkit-touch-callout: none; -webkit-user-select: none;
+                -khtml-user-select: none; -moz-user-select: none;
+                -ms-user-select: none; user-select: none;
+                padding: 0 4px; width: 4em;
+                color: #aaaaaa;
+              }
+            pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+            div.sourceCode
+              {   }
+            @media screen {
+            pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+            }
+            code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+            code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+            code span.at { color: #7d9029; } /* Attribute */
+            code span.bn { color: #40a070; } /* BaseN */
+            code span.bu { color: #008000; } /* BuiltIn */
+            code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+            code span.ch { color: #4070a0; } /* Char */
+            code span.cn { color: #880000; } /* Constant */
+            code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+            code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+            code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+            code span.dt { color: #902000; } /* DataType */
+            code span.dv { color: #40a070; } /* DecVal */
+            code span.er { color: #ff0000; font-weight: bold; } /* Error */
+            code span.ex { } /* Extension */
+            code span.fl { color: #40a070; } /* Float */
+            code span.fu { color: #06287e; } /* Function */
+            code span.im { color: #008000; font-weight: bold; } /* Import */
+            code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+            code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+            code span.op { color: #666666; } /* Operator */
+            code span.ot { color: #007020; } /* Other */
+            code span.pp { color: #bc7a00; } /* Preprocessor */
+            code span.sc { color: #4070a0; } /* SpecialChar */
+            code span.ss { color: #bb6688; } /* SpecialString */
+            code span.st { color: #4070a0; } /* String */
+            code span.va { color: #19177c; } /* Variable */
+            code span.vs { color: #4070a0; } /* VerbatimString */
+            code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+              </style>
+
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/theme/simple.css" id="theme">
+
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/plugin/customcontrols/style.css">
+
+  <style type="text/css">
+  /* some tweaks to reveal css */
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+  </style>
+
+    <link rel="stylesheet" href="css\custom.css"/>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">判断选择用分支</h1>
+  <h2 class="author">李保成</h2>
+  <h3 class="date">2025年10月21日</h3>
+</section>
+
+<section>
+<section id="一if语句" class="title-slide slide level1">
+<h1>一、if语句</h1>
+<div class="topic-sentence with-bg">
+<p>生活中需要我们根据不同的条件和情况选择做不同事情，在计算机语言中，同样需要引入选择选择（分支）结构来描述事件的解决过程。</p>
+</div>
+</section>
+<section id="if语句格式" class="slide level2">
+<h2>if语句格式</h2>
+<p>【例2.1】阅读程序。</p>
+<div class="column" style="width:48%;">
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> n<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>n<span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">是正数</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> n<span class="op">);</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">不是正数</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> n<span class="op">);</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="column" style="width:48%;">
+<ol type="1">
+<li>请阅读程序，分析该程序的功能是什么？</li>
+<li>尝试总结if语句格式。</li>
+</ol>
+</div>
+</section>
+<section id="if语句格式-1" class="slide level2">
+<h2>if语句格式</h2>
+<p>【例2.2】阅读并运行以下程序。</p>
+<div class="column" style="width:48%;">
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> d <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">);</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>a <span class="op">&gt;</span> b<span class="op">)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> a <span class="op">/</span> b<span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> a <span class="op">%</span> b<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> c <span class="op">+</span> d<span class="op">);</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="column" style="width:48%;">
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> d <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">);</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>a <span class="op">&gt;</span> b<span class="op">)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> a <span class="op">/</span> b<span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> a <span class="op">%</span> b<span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> c <span class="op">+</span> d<span class="op">);</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="if语句格式-2" class="slide level2">
+<h2>if语句格式</h2>
+<p>if语句格式：</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>表达式<span class="op">)</span> 语句<span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> 语句<span class="dv">2</span><span class="op">;</span></span></code></pre></div>
+<div class="hint">
+<p><strong>提示1：</strong><code>else 语句2;</code>是可以省略的。</p>
+</div>
+<div class="hint">
+<p><strong>提示2：</strong>用花括号<code>{}</code>括起来，将几个语句括起来的语句组合称为<strong>复合语句</strong>，可以作为一个整体，充当if语句中的“语句1”或者“语句2”，且后面不需要加分号。</p>
+</div>
+</section></section>
+<section>
+<section id="二选择条件的描述" class="title-slide slide level1">
+<h1>二、选择条件的描述</h1>
+<div class="topic-sentence with-bg">
+<p>选择结构问题的一个关键点是选择条件的描述，即if语句中（表达式）的具体表达。</p>
+</div>
+</section>
+<section id="关系表达式" class="slide level2">
+<h2>关系表达式</h2>
+<p>很自然地我们会用使用数学的比较符来描述if语句中的条件。</p>
+<div class="tbl tbl--comfort">
+<div class="tbl__caption">
+关系表达式运算符表
+</div>
+<div class="tbl__scroller">
+<table>
+<thead>
+<tr class="header">
+<th>等于</th>
+<th>不等于</th>
+<th>大于</th>
+<th>小于</th>
+<th>大于等于</th>
+<th>小于等于</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>==</td>
+<td>!=</td>
+<td>&gt;</td>
+<td>&lt;</td>
+<td>&gt;=</td>
+<td>&lt;=</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="fragment">
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> b <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>a <span class="op">==</span> b<span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;这个世界太疯狂了！&quot;</span><span class="op">);</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> printf<span class="op">(</span><span class="st">&quot;a不等于b！&quot;</span><span class="op">);</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+</section>
+<section id="关系表达式-1" class="slide level2">
+<h2>关系表达式</h2>
+<p>设a=5，b=6，c=7。写出下面关系表达式的值。</p>
+<div class="tbl tbl--comfort">
+  <div class="tbl__scroller">
+    <table>
+      <thead>
+        <tr>
+          <th>关系表达式</th>
+          <th>值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>a > b</td>
+          <td><input type="text" data-correct="0" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>a + b > b + c</td>
+          <td><input type="text" data-correct="0" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>(a==3) >= (b==5)</td>
+          <td><input type="text" data-correct="1" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>(a=3) >= (b==5)</td>
+          <td><input type="text" data-correct="1" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>(a>b) > (b < c)</td>
+          <td><input type="text" data-correct="0" class="check-input"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+/* 仅补充输入框及验证状态的样式（不干扰你的核心CSS） */
+.check-input {
+  width: 50px;
+  padding: 4px;
+  border: 1px solid var(--tbl-sep); /* 复用你的表格分隔线颜色 */
+  font-family: var(--tbl-font); /* 复用表格字体 */
+  text-align: center; /* 输入的数字居中显示 */
+}
+
+/* 正确状态：绿色背景（参考你的题解块绿色系） */
+.correct {
+  background-color: rgba(40, 167, 69, 0.15); /* 基于 --qa-solve 淡化 */
+  border-color: #28a745;
+}
+
+/* 错误状态：灰色背景（参考你的表格次要色） */
+.incorrect {
+  background-color: rgba(102, 112, 133, 0.1); /* 基于 --tbl-muted 淡化 */
+  border-color: var(--tbl-sep);
+}
+</style>
+
+<script>
+// 仅保留值验证逻辑：监听输入框失去焦点事件
+document.addEventListener('DOMContentLoaded', function() {
+  const inputs = document.querySelectorAll('.check-input');
+  inputs.forEach(input => {
+    input.addEventListener('blur', function() {
+      const userVal = this.value.trim(); // 获取用户输入（去空格）
+      const correctVal = this.getAttribute('data-correct'); // 获取正确答案
+      
+      // 根据验证结果添加/移除状态类（控制背景色）
+      if (userVal === correctVal) {
+        this.classList.add('correct');
+        this.classList.remove('incorrect');
+      } else {
+        this.classList.add('incorrect');
+        this.classList.remove('correct');
+      }
+    });
+  });
+});
+</script>
+</section>
+<section id="逻辑表达式" class="slide level2">
+<h2>逻辑表达式</h2>
+<p>【例2.3】空军飞行人员是国家的特殊人才和宝贵资源。空军招飞对象身体要求身高在165-185cm之间。输入身高，输出是否符合身高条件。</p>
+<pre><code>输入：185
+输出：符合</code></pre>
+<pre><code>输入：160
+输出：不符合</code></pre>
+<div class="fragment">
+<ol type="1">
+<li>如何表达身高在165-185cm之间？</li>
+</ol>
+</div>
+</section>
+<section id="逻辑表达式-1" class="slide level2">
+<h2>逻辑表达式</h2>
+<p>【例2.3】空军飞行人员是国家的特殊人才和宝贵资源。空军招飞对象身体要求身高在165-185cm之间。输入身高，输出是否符合身高条件。</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> h<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>h<span class="op">);</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>h <span class="op">&gt;=</span> <span class="dv">165</span> <span class="op">&amp;&amp;</span> h <span class="op">&lt;=</span> <span class="dv">185</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;符合</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> printf<span class="op">(</span><span class="st">&quot;不符合</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="逻辑运算符" class="slide level2">
+<h2>逻辑运算符</h2>
+<div class="tbl tbl--comfort">
+<div class="tbl__caption">
+逻辑运算符表
+</div>
+<div class="tbl__scroller">
+<table>
+<thead>
+<tr class="header">
+<th>运算符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>!</code></td>
+<td>逻辑非（否定）</td>
+</tr>
+<tr class="even">
+<td><code>&amp;&amp;</code></td>
+<td>逻辑与（并且）</td>
+</tr>
+<tr class="odd">
+<td><code>||</code></td>
+<td>逻辑或（或者）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="逻辑表达式-2" class="slide level2">
+<h2>逻辑表达式</h2>
+<p>根据问题写出逻辑表达式。</p>
+<div class="tbl tbl--comfort">
+  <div class="tbl__scroller">
+    <table>
+      <thead>
+        <tr>
+          <th>问题描述</th>
+          <th>请写出对应的逻辑表达式（假设变量为n）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>判断一个数能否被6整除</td>
+          <td><input type="text" data-correct="n % 2 == 0 && n % 3 == 0" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>判断一个数是否在[1, 5]范围内（包含1和5）</td>
+          <td><input type="text" data-correct="n >= 1 && n <= 5" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>判断一个数是否等于零</td>
+          <td><input type="text" data-correct="n == 0" class="check-input"></td>
+        </tr>
+        <tr>
+          <td>判断一个数能否不被400整除</td>
+          <td><input type="text" data-correct="n % 400 != 0" class="check-input"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+.check-input {
+  width: 220px;
+  padding: 4px;
+  border: 1px solid var(--tbl-sep);
+  font-family: var(--tbl-font);
+  text-align: left;
+  text-align: center; /* 输入的数字居中显示 */
+
+}
+
+.correct {
+  background-color: rgba(40, 167, 69, 0.15);
+  border-color: #28a745;
+}
+
+.incorrect {
+  background-color: rgba(102, 112, 133, 0.1);
+  border-color: var(--tbl-sep);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const inputs = document.querySelectorAll('.check-input');
+  inputs.forEach(input => {
+    input.addEventListener('blur', function() {
+      const userVal = this.value.trim();
+      const correctVal = this.getAttribute('data-correct');
+      
+      if (userVal === correctVal) {
+        this.classList.add('correct');
+        this.classList.remove('incorrect');
+      } else {
+        this.classList.add('incorrect');
+        this.classList.remove('correct');
+      }
+    });
+  });
+});
+</script>
+</section>
+<section id="判断闰年" class="slide level2">
+<h2>判断闰年</h2>
+<p>【例2.4】输入年份<code>year</code>，输出该年是否是闰年。闰年输出<code>1</code>，平年输出<code>0</code>。</p>
+</section></section>
+<section>
+<section id="三else-if语句和嵌套if语句"
+class="title-slide slide level1">
+<h1>三、else if语句和嵌套if语句</h1>
+
+</section>
+<section id="else-if语句" class="slide level2">
+<h2>else if语句</h2>
+<div class="hint">
+<p><strong>提示：</strong>
+如果有多个并列、情况不交叉的条件需要一一处理，可以用else if语句。</p>
+</div>
+</section>
+<section id="嵌套if语句" class="slide level2">
+<h2>嵌套if语句</h2>
+</section></section>
+<section id="四分支结构程序设计实例" class="title-slide slide level1">
+<h1>四、分支结构程序设计实例</h1>
+
+</section>
+    </div>
+  </div>
+
+  <script src="libs/reveal.js-4.2.1/dist/reveal.js"></script>
+  
+  <!-- reveal.js plugins -->
+  <script src="libs/reveal.js-4.2.1/plugin/chalkboard/plugin.js"></script>
+  <script src="libs/reveal.js-4.2.1/plugin/customcontrols/plugin.js"></script>
+  
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Can be used to limit the contexts in which the slide number appears
+        showSlideNumber: 'all',
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+        // Push each slide change to the browser history
+        // Implies `hash: true`
+        history: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The display mode that will be used to show slides
+        display: 'block',
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+        height: 720,
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+
+        chalkboard: {
+          boardmarkerWidth: 4,
+          chalkWidth: 3,
+          readOnly: false,
+          theme: 'whiteboard',
+        },
+        customcontrols: {
+            controls: [
+            	{ icon: '<i class="fa fa-pen-square"></i>',
+            	  title: 'Toggle chalkboard (B)',
+            	  action: 'RevealChalkboard.toggleChalkboard();'
+            	},
+            	{ icon: '<i class="fa fa-pen"></i>',
+            	  title: 'Toggle notes canvas (C)',
+            	  action: 'RevealChalkboard.toggleNotesCanvas();'
+            	}
+            ]
+        },
+
+        // Optional reveal.js plugins
+        plugins: [
+          RevealChalkboard,
+          RevealCustomControls,
+        ]
+      });
+
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
