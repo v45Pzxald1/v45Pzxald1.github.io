@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="李保成" />
+  <title>比赛判分与日常OJ训练</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/reset.css">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/reveal.css">
+
+  <style type="text/css">
+    /* CSS from pandoc style.html() */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+                  </style>
+
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/theme/simple.css" id="theme">
+
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/plugin/customcontrols/style.css">
+
+  <style type="text/css">
+  /* some tweaks to reveal css */
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+  </style>
+
+    <link rel="stylesheet" href="css\custom.css"/>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">比赛判分与日常OJ训练</h1>
+  <h2 class="author">李保成</h2>
+  <h3 class="date">2025年10月23日</h3>
+</section>
+
+<section>
+<section id="一比赛判题逻辑" class="title-slide slide level1">
+<h1>一、比赛判题逻辑</h1>
+<div class="topic-sentence with-bg">
+<p>信息学竞赛采用采取<strong>黑盒测试</strong>：事先准备好一些测试用例，然后用它们测试选手程序，根据运行结果评分。</p>
+</div>
+</section>
+<section id="提交环节严格匹配文件要求" class="slide level2">
+<h2>提交环节：严格匹配文件要求</h2>
+<p>选手需提交与题目指定名称<strong>完全一致</strong>的代码文件，例如题目
+“zoo” 需提交zoo.cpp。</p>
+<ul>
+<li>文件名错误（如多后缀、拼写错误）会直接导致评测失败，该题得 0
+分。</li>
+</ul>
+</section>
+<section id="编译环节验证代码可运行性" class="slide level2">
+<h2>编译环节：验证代码可运行性</h2>
+<p>评测机首先会使用对应编程语言的编译器（如 C++ 用 GCC）对提交的 zoo.cpp
+进行编译。</p>
+<ul>
+<li>若编译失败（如语法错误、缺少头文件），程序无法生成可执行文件，该题直接得
+0 分。</li>
+<li>若编译成功，生成可执行文件，进入下一步评测。</li>
+</ul>
+</section>
+<section id="评测环节按测试点逐个运行" class="slide level2">
+<h2>评测环节：按测试点逐个运行</h2>
+<p>评测机为 “zoo” 题准备多组独立测试数据（即评测点），每组数据对应 1
+个或多个分数。</p>
+<ol type="1">
+<li>评测机会将每组测试数据的 “输入” 传入可执行文件，运行程序并生成
+“输出结果”。</li>
+<li>程序需在规定时间（如 1 秒）和内存限制（如
+256MB）内完成运行，超时、超内存或运行崩溃（如数组越界），该测试点得 0
+分。</li>
+</ol>
+</section>
+<section id="比对环节判定测试点得分" class="slide level2">
+<h2>比对环节：判定测试点得分</h2>
+<p>评测机将程序的 “输出结果” 与该测试点的 “标准答案” 进行比对。</p>
+<ul>
+<li>比对前会过<strong>滤行末多余空格和文件末尾多余回车</strong>，但不允许输出前或中间出现多余空行，格式不符视为错误。</li>
+<li>若输出内容与标准答案完全一致（格式合规），获得该测试点的全部分数；若不一致，该测试点得
+0 分。</li>
+</ul>
+</section>
+<section id="得分计算累加测试点分数求" class="slide level2">
+<h2>得分计算：累加测试点分数求</h2>
+<p>最后将 “zoo” 题所有测试点的得分相加，得到该题的最终总分，例如 10
+个测试点各 10 分，正确 8 个则得 80 分。</p>
+</section></section>
+<section id="二文件读写操作" class="title-slide slide level1">
+<h1>二、文件读写操作</h1>
+
+</section>
+
+<section id="三比赛常用技巧" class="title-slide slide level1">
+<h1>三、比赛常用技巧</h1>
+
+</section>
+
+<section id="四在线评测系统" class="title-slide slide level1">
+<h1>四、在线评测系统</h1>
+
+</section>
+
+<section>
+<section id="五常见错误类型" class="title-slide slide level1">
+<h1>五、常见错误类型</h1>
+<div class="topic-sentence with-bg">
+<p>在 OJ 平台提交代码后，系统会即时给出评测反馈，其中 “Accepted（简称
+AC）”
+代表代码完全符合题目要求，被裁判系统接受；不过在日常练习中，我们经常会遇到得零分或仅得部分分的情况。</p>
+</div>
+</section>
+<section id="常见错误类型" class="slide level2">
+<h2>常见错误类型</h2>
+<div class="tbl tbl--comfort">
+<div class="tbl__scroller">
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>错误标识</th>
+<th>名称</th>
+<th>核心原因</th>
+<th>排查方向</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CE（Compile Error）</td>
+<td>编译错误</td>
+<td>语法错、缺头文件、语言不兼容</td>
+<td>查分号/补头文件、匹配语言版本</td>
+</tr>
+<tr class="even">
+<td>WA（Wrong Answer）</td>
+<td>答案错误</td>
+<td>逻辑错、输出格式不对</td>
+<td>对比样例、查边界数据、改格式</td>
+</tr>
+<tr class="odd">
+<td>TLE（Time Limit Exceeded）</td>
+<td>超时错误</td>
+<td>代码慢、算法复杂度高</td>
+<td>换高效算法</td>
+</tr>
+<tr class="even">
+<td>MLE（Memory Limit Exceeded）</td>
+<td>超内存错误</td>
+<td>数组太大、内存泄漏</td>
+<td>减小数组、释放无用内存</td>
+</tr>
+<tr class="odd">
+<td>RE（Runtime Error）</td>
+<td>运行错误</td>
+<td>数组越界、除零、空指针</td>
+<td>查下标、规避除零、初始化指针</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section></section>
+<section>
+<section id="六日常训练技巧" class="title-slide slide level1">
+<h1>六、日常训练技巧</h1>
+
+</section>
+<section id="训练要求" class="slide level2">
+<h2>训练要求</h2>
+</section>
+<section id="ifdef" class="slide level2">
+<h2>#ifdef</h2>
+</section></section>
+    </div>
+  </div>
+
+  <script src="libs/reveal.js-4.2.1/dist/reveal.js"></script>
+  
+  <!-- reveal.js plugins -->
+  <script src="libs/reveal.js-4.2.1/plugin/chalkboard/plugin.js"></script>
+  <script src="libs/reveal.js-4.2.1/plugin/customcontrols/plugin.js"></script>
+  
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Can be used to limit the contexts in which the slide number appears
+        showSlideNumber: 'all',
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+        // Push each slide change to the browser history
+        // Implies `hash: true`
+        history: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The display mode that will be used to show slides
+        display: 'block',
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+        height: 720,
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+
+        chalkboard: {
+          boardmarkerWidth: 4,
+          chalkWidth: 3,
+          readOnly: false,
+          theme: 'whiteboard',
+        },
+        customcontrols: {
+            controls: [
+            	{ icon: '<i class="fa fa-pen-square"></i>',
+            	  title: 'Toggle chalkboard (B)',
+            	  action: 'RevealChalkboard.toggleChalkboard();'
+            	},
+            	{ icon: '<i class="fa fa-pen"></i>',
+            	  title: 'Toggle notes canvas (C)',
+            	  action: 'RevealChalkboard.toggleNotesCanvas();'
+            	}
+            ]
+        },
+
+        // Optional reveal.js plugins
+        plugins: [
+          RevealChalkboard,
+          RevealCustomControls,
+        ]
+      });
+
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

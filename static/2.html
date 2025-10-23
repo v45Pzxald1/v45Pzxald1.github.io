@@ -140,7 +140,7 @@
 <section id="title-slide">
   <h1 class="title">判断选择用分支</h1>
   <h2 class="author">李保成</h2>
-  <h3 class="date">2025年10月21日</h3>
+  <h3 class="date">2025年10月23日</h3>
 </section>
 
 <section>
@@ -505,13 +505,92 @@ class="title-slide slide level1">
 </section>
 <section id="else-if语句" class="slide level2">
 <h2>else if语句</h2>
+<p>【例2.4】某社团有个小传统，每到夏天，老师都会给社团成员买雪糕解暑。今年打算从外卖平台订购，平台根据购买数量设置了明确的折扣规则，具体如下：</p>
+<ul>
+<li>购买 1~10 个：每个雪糕 2 元，无折扣；</li>
+<li>购买 11~30 个：每个雪糕按原价打 9 折；</li>
+<li>购买 31 个及以上：每个雪糕按原价打 8 折。</li>
+</ul>
+<p>输入需要购买的雪糕数量，计算并输出应付的总钱数（结果保留 1
+位小数）。</p>
+<pre><code>输入：35
+输出：56.0</code></pre>
+</section>
+<section id="else-if语句-1" class="slide level2">
+<h2>else if语句</h2>
+<p>【例2.4】</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> ans <span class="op">=</span> <span class="fl">0.0</span><span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> num<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>num<span class="op">);</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>num <span class="op">&lt;=</span> <span class="dv">10</span><span class="op">)</span> ans <span class="op">=</span> num <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>num <span class="op">&gt;</span> <span class="dv">10</span> <span class="op">&amp;&amp;</span> num <span class="op">&lt;=</span> <span class="dv">30</span><span class="op">)</span> ans <span class="op">=</span> num <span class="op">*</span> <span class="dv">2</span> <span class="op">*</span> <span class="fl">0.9</span><span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> ans <span class="op">=</span> num <span class="op">*</span> <span class="dv">2</span> <span class="op">*</span> <span class="fl">0.8</span><span class="op">;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%.1lf</span><span class="st">&quot;</span><span class="op">,</span> ans<span class="op">);</span> </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <div class="hint">
 <p><strong>提示：</strong>
 如果有多个并列、情况不交叉的条件需要一一处理，可以用else if语句。</p>
 </div>
 </section>
+<section id="else-if语句-2" class="slide level2">
+<h2>else if语句</h2>
+<p>【例2.5】输入三个整数，输出其中最大的数。</p>
+<div class="column" style="width:48%;">
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> ans<span class="op">;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">,</span> <span class="op">&amp;</span>c<span class="op">);</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>a <span class="op">&gt;</span> b <span class="op">&amp;&amp;</span> a <span class="op">&gt;</span> c<span class="op">)</span> ans <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>b <span class="op">&gt;</span> a <span class="op">&amp;&amp;</span> b <span class="op">&gt;</span> c<span class="op">)</span> ans <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> ans <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> ans<span class="op">);</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="column" style="width:48%;">
+<ol type="1">
+<li>代码思路是错误的，错在哪里？如何修改？</li>
+<li>还有其他方法找最大的数吗？</li>
+</ol>
+</div>
+</section>
+<section id="else-if语句-3" class="slide level2">
+<h2>else if语句</h2>
+<p>【例2.5】输入三个整数，输出其中最大的数。</p>
+<div class="column" style="width:48%;">
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> ans<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">,</span> <span class="op">&amp;</span>c<span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    ans <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>b <span class="op">&gt;</span> ans<span class="op">)</span> ans <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;</span> ans<span class="op">)</span> ans <span class="op">=</span> c<span class="op">;</span> </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> ans<span class="op">);</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="column" style="width:48%;">
+<ol type="1">
+<li>和上一种处理方法比较，现在的思路优点有哪些？</li>
+<li>题目修改为输入100个整数，如何处理？</li>
+</ol>
+</div>
+</section>
 <section id="嵌套if语句" class="slide level2">
 <h2>嵌套if语句</h2>
+<p>【例2.6】输入三个整数，按从小到大的顺序输出。</p>
 </section></section>
 <section id="四分支结构程序设计实例" class="title-slide slide level1">
 <h1>四、分支结构程序设计实例</h1>
