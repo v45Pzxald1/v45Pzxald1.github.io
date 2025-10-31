@@ -140,7 +140,7 @@
 <section id="title-slide">
   <h1 class="title">重复操作用循环</h1>
   <h2 class="author">李保成</h2>
-  <h3 class="date">2025年10月30日</h3>
+  <h3 class="date">2025年10月31日</h3>
 </section>
 
 <section>
@@ -165,8 +165,8 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </section></section>
 <section>
-<section id="for语句" class="title-slide slide level1">
-<h1>for语句</h1>
+<section id="二for语句" class="title-slide slide level1">
+<h1>二、for语句</h1>
 <div class="topic-sentence with-bg">
 <p>三种循环结构<code>for</code>、<code>while</code>和<code>do-while</code>，大多数情况它们是可以相互转换的。</p>
 </div>
@@ -247,21 +247,63 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#c
 class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>循环变量初始化<span class="op">;</span> 循环条件<span class="op">;</span> 循环变量增量<span class="op">)</span> 语句<span class="op">;</span></span></code></pre></div>
 </div>
 </section>
+<section id="for语句格式-1" class="slide level2">
+<h2>for语句格式</h2>
+<p><strong>阅读</strong>以下代码，说出运行结果。</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">5</span><span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span></code></pre></div>
+<details>
+<summary>
+答案
+</summary>
+<pre><code>12345678910
+</code></pre>
+</details>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">10</span><span class="op">;</span> i <span class="op">+=</span> <span class="dv">2</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span></code></pre></div>
+<details>
+<summary>
+答案
+</summary>
+<pre><code>13579
+</code></pre>
+</details>
+</section>
+<section id="for语句格式-2" class="slide level2">
+<h2>for语句格式</h2>
+<p><strong>阅读</strong>以下代码，说出运行结果。</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">100</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">/=</span> <span class="dv">3</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span></code></pre></div>
+<details>
+<summary>
+答案
+</summary>
+<pre><code></code></pre>
+</details>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">100</span><span class="op">;</span> i <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">/=</span> <span class="dv">3</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span></code></pre></div>
+<details>
+<summary>
+答案
+</summary>
+<pre><code>3311310000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</code></pre>
+</details>
+</section>
 <section id="for语句的运行逻辑" class="slide level2">
 <h2>for语句的运行逻辑</h2>
 <div class="column" style="width:48%;">
 <p>【例3.2】阅读以下代码，填写右侧表格。</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> i <span class="op">&lt;</span> j<span class="op">;</span> <span class="op">++</span>i<span class="op">,</span> <span class="op">--</span>j<span class="op">)</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> i <span class="op">&lt;</span> j<span class="op">;</span> <span class="op">++</span>i<span class="op">,</span> <span class="op">--</span>j<span class="op">)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="column" style="width:48%;">
 <div class="tbl tbl--comfort">
@@ -302,7 +344,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#c
         <!-- 第5行数据（用户填写） -->
         <tr>
           <td><input type="text" data-correct="4" class="check-input"></td>
-          <td><input type="text" data-correct="2" class="check-input"></td>
+          <td><input type="text" data-correct="6" class="check-input"></td>
+          <td>输出<input type="text" data-correct="4 6" class="check-input"></td>
+        </tr>
+        <!-- 第5行数据（用户填写） -->
+        <tr>
+          <td><input type="text" data-correct="5" class="check-input"></td>
+          <td><input type="text" data-correct="5" class="check-input"></td>
           <td>退出循环</td>
         </tr>
       </tbody>
@@ -387,18 +435,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <h2>for语句的运行逻辑</h2>
 <div class="column" style="width:48%;">
 <p>【例3.3】阅读以下代码，填写右侧表格。</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> i<span class="op">,</span> j<span class="op">;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">21</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">5</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">50</span><span class="op">;</span> <span class="op">++</span>i<span class="op">,</span> j <span class="op">=</span> j <span class="op">+</span> <span class="dv">5</span><span class="op">)</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> j<span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> i<span class="op">,</span> j<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">21</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">5</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">50</span><span class="op">;</span> <span class="op">++</span>i<span class="op">,</span> j <span class="op">=</span> j <span class="op">+</span> <span class="dv">5</span><span class="op">)</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> j<span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="column" style="width:48%;">
 <div class="tbl tbl--comfort">
@@ -530,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <li>计算<span class="math inline">\(n! = 1 \times 2 \times 3 \dots
 \times n\)</span>。</li>
 <li>计算<span class="math inline">\(\sum_{k=1}^n k! = 1! + 2! + \dots +
-n!\)</span></li>
+n!\)</span> （多重循环，可以暂时跳过）</li>
 </ol>
 </section>
 <section id="for语句的应用-1" class="slide level2">
@@ -543,19 +591,19 @@ n!\)</span></li>
 <h2>for语句的应用 复习一道改编的题目</h2>
 <p>【例3.0】输入<code>3</code>个人的身高，输出其中最大的数。（假定身高为整数）</p>
 <div class="column" style="width:48%;">
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> ans<span class="op">;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">,</span> <span class="op">&amp;</span>c<span class="op">);</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    ans <span class="op">=</span> a<span class="op">;</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>b <span class="op">&gt;</span> ans<span class="op">)</span> ans <span class="op">=</span> b<span class="op">;</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;</span> ans<span class="op">)</span> ans <span class="op">=</span> c<span class="op">;</span> </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> ans<span class="op">);</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># include </span><span class="im">&lt;bits/stdc++.h&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> ans<span class="op">;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d%d%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>a<span class="op">,</span> <span class="op">&amp;</span>b<span class="op">,</span> <span class="op">&amp;</span>c<span class="op">);</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    ans <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>b <span class="op">&gt;</span> ans<span class="op">)</span> ans <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;</span> ans<span class="op">)</span> ans <span class="op">=</span> c<span class="op">;</span> </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> ans<span class="op">);</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="column" style="width:48%;">
 <ol type="1">
@@ -578,16 +626,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#c
 <summary>
 点击展开答案
 </summary>
-<div class="sourceCode" id="cb8"><pre
+<div class="sourceCode" id="cb16"><pre
 class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
 </details>
-</section>
-<section id="for语句的应用-2" class="slide level2">
-<h2>for语句的应用</h2>
 </section></section>
 <section>
-<section id="while语句" class="title-slide slide level1">
-<h1>while语句</h1>
+<section id="三while语句" class="title-slide slide level1">
+<h1>三、while语句</h1>
 
 </section>
 <section id="while语句格式" class="slide level2">
@@ -599,13 +644,20 @@ class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
 <section id="do-while语句" class="slide level2">
 <h2>do while语句</h2>
 </section></section>
-<section id="多重循环" class="title-slide slide level1">
-<h1>多重循环</h1>
+<section>
+<section id="四多重循环" class="title-slide slide level1">
+<h1>四、多重循环</h1>
 
 </section>
-
-<section id="循环结构程序设计实例" class="title-slide slide level1">
-<h1>循环结构程序设计实例</h1>
+<section id="多重循环的应用" class="slide level2">
+<h2>多重循环的应用</h2>
+<p>【例3.4】给出一个正整数<code>n</code><span class="math inline">\((1
+\leq n \leq 10)\)</span>，使用<code>for</code>语句完成以下内容。 3.
+计算<span class="math inline">\(\sum_{k=1}^n k! = 1! + 2! + \dots +
+n!\)</span></p>
+</section></section>
+<section id="五循环结构程序设计实例" class="title-slide slide level1">
+<h1>五、循环结构程序设计实例</h1>
 
 </section>
     </div>
