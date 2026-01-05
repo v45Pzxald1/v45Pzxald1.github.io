@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瓢虫移动大冒险</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: hidden; /* 防止彩带动画溢出横向滚动 */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* 任务说明样式 */
+        .task-desc {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* 九宫格地图样式 */
+        .map-container {
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            grid-template-rows: repeat(3, 120px);
+            gap: 8px;
+            background-color: #ddd;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .grid-cell {
+            background-color: #fff;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            /* 路径过渡效果 */
+            transition: background-color 0.5s ease;
+        }
+
+        /* 走过的路径格子样式（渐变绿色） */
+        .grid-cell.path {
+            transition: background-color 0.5s ease;
+        }
+
+        /* 地点文字样式 */
+        .shop-text {
+            z-index: 5;
+        }
+
+        /* 原版瓢虫样式（带SVG图案） */
+        .ladybug {
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='40' ry='35' fill='%23e74c3c'/%3E%3Ccircle cx='75' cy='50' r='15' fill='%23000'/%3E%3Cpath d='M85 50 L95 40 L100 35' stroke='%23000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M85 50 L95 60 L100 65' stroke='%23000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='70' cy='45' r='4' fill='%23fff'/%3E%3Ccircle cx='70' cy='55' r='4' fill='%23fff'/%3E%3Ccircle cx='30' cy='35' r='8' fill='%23000'/%3E%3Ccircle cx='30' cy='65' r='8' fill='%23000'/%3E%3Ccircle cx='50' cy='30' r='8' fill='%23000'/%3E%3Ccircle cx='50' cy='70' r='8' fill='%23000'/%3E%3C/svg%3E");
+            background-size: cover;
+            position: absolute;
+            transition: all 0.5s ease;
+            transform: rotate(0deg);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        /* 指令区样式 */
+        .commands {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .command-pool {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* 统一指令按钮样式（所有指令按钮保持一致） */
+        .command-btn, .loop-count {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: move;
+            font-size: 16px;
+            /* 核心：文字上下居中 - 固定行高+flex双保险 */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* 循环次数按钮特殊样式（仅背景色区分） */
+        .loop-count {
+            background-color: #1abc9c;
+            width: 120px;
+            gap: 8px;
+        }
+
+        /* 循环次数输入框样式（保持放大） */
+        .loop-count input {
+            width: 60px;
+            height: 35px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid #fff;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            padding: 5px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        /* 指令栏样式（加宽） */
+        .command-bar {
+            display: flex;
+            gap: 10px;
+            padding: 20px 25px;
+            background-color: #eee;
+            border-radius: 8px;
+            min-height: 100px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        /* 指令项基础样式（统一高度+文字居中） */
+        .command-item {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            /* 核心：文字上下居中 */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        /* 指令项颜色区分（核心：循环开始/结束统一颜色） */
+        .command-item.normal-item {
+            background-color: #3498db; /* 普通指令：前进/左转/右转 */
+        }
+        .command-item.loop-count-item {
+            background-color: #1abc9c; /* 循环次数 */
+        }
+        .command-item.loop-pair-item {
+            background-color: #9b59b6; /* 循环开始/结束统一紫色 */
+        }
+
+        /* 控制按钮样式 */
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #start-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        #reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* ========== 洛谷AC特效样式 ========== */
+        /* 全屏遮罩 */
+        .ac-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        /* AC文字容器 */
+        .ac-content {
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* AC大文字 */
+        .ac-text {
+            font-size: 120px;
+            font-weight: bold;
+            color: #4CAF50;
+            text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF50;
+            animation: acPulse 2s ease-in-out infinite, acScale 1s ease-out;
+        }
+
+        /* 副标题 */
+        .ac-subtext {
+            font-size: 30px;
+            color: #fff;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #fff;
+            animation: acFadeIn 1.5s ease-out;
+        }
+
+        /* 重置按钮 */
+        .ac-reset-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #4CAF50;
+            transition: all 0.3s ease;
+            animation: acFadeIn 2s ease-out;
+        }
+
+        .ac-reset-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #4CAF50;
+        }
+
+        /* 彩带元素 */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.8;
+            animation: confettiFall 3s ease-in-out forwards;
+        }
+
+        /* ========== 动画关键帧 ========== */
+        /* AC文字脉冲 */
+        @keyframes acPulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF50;
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 30px #4CAF50, 0 0 60px #4CAF50, 0 0 80px #4CAF50;
+            }
+        }
+
+        /* AC文字缩放入场 */
+        @keyframes acScale {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 渐入动画 */
+        @keyframes acFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 彩带飘落动画 */
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            .command-pool {
+                gap: 10px;
+            }
+            .command-btn, .loop-count {
+                padding: 8px 15px;
+                font-size: 14px;
+                height: 45px;
+            }
+            .loop-count {
+                width: 100px;
+                font-size: 16px;
+            }
+            .loop-count input {
+                width: 50px;
+                height: 30px;
+                font-size: 18px;
+            }
+            /* 响应式AC文字 */
+            .ac-text {
+                font-size: 80px;
+            }
+            .ac-subtext {
+                font-size: 24px;
+            }
+            .ac-reset-btn {
+                padding: 12px 30px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>瓢虫移动大冒险</h1>
+
+    <!-- 任务说明 -->
+    <div class="task-desc">
+        🎯 任务目标：瓢虫从原地(1,1)出发，依次到达【面包店(1,3)】→【水果店(3,3)】→【海鲜店(3,1)】，最后回到原地(1,1)即为成功！
+    </div>
+
+    <!-- 地图容器 -->
+    <div class="map-container">
+        <div class="grid">
+            <!-- 第一行 -->
+            <div class="grid-cell" data-row="1" data-col="1">
+                <div class="shop-text">原地</div>
+                <div class="ladybug" id="ladybug"></div>
+            </div>
+            <div class="grid-cell" data-row="1" data-col="2"></div>
+            <div class="grid-cell" data-row="1" data-col="3">
+                <div class="shop-text">面包店</div>
+            </div>
+            <!-- 第二行 -->
+            <div class="grid-cell" data-row="2" data-col="1"></div>
+            <div class="grid-cell" data-row="2" data-col="2"></div>
+            <div class="grid-cell" data-row="2" data-col="3"></div>
+            <!-- 第三行 -->
+            <div class="grid-cell" data-row="3" data-col="1">
+                <div class="shop-text">海鲜店</div>
+            </div>
+            <div class="grid-cell" data-row="3" data-col="2"></div>
+            <div class="grid-cell" data-row="3" data-col="3">
+                <div class="shop-text">水果店</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 指令区（循环指令拆分显示） -->
+    <div class="commands">
+        <div class="command-pool">
+            <!-- 基础指令 -->
+            <div class="command-btn" draggable="true" data-command="forward">前进一格</div>
+            <div class="command-btn" draggable="true" data-command="left">原地左转</div>
+            <div class="command-btn" draggable="true" data-command="right">原地右转</div>
+            <!-- 循环指令拆分（和基础指令并列，不再捆绑） -->
+            <div class="loop-count" draggable="true" data-command="loop-count">
+                循环<input type="number" value="2" min="1" max="10" class="loop-num">次
+            </div>
+            <div class="command-btn" draggable="true" data-command="loop-start">循环开始</div>
+            <div class="command-btn" draggable="true" data-command="loop-end">循环结束</div>
+        </div>
+        <div class="command-bar" id="command-bar"></div>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls">
+        <button class="control-btn" id="start-btn">开始移动</button>
+        <button class="control-btn" id="reset-btn">重置游戏</button>
+    </div>
+
+    <!-- 洛谷AC风格特效容器（替换原来的胜利弹窗） -->
+    <div class="ac-modal" id="ac-modal">
+        <div class="ac-content">
+            <div class="ac-text">恭喜！！！</div>
+            <div class="ac-subtext">恭喜完成所有任务 🎉</div>
+            <button class="ac-reset-btn" id="ac-reset-btn">再来一次</button>
+        </div>
+    </div>
+
+    <script>
+        // 瓢虫核心状态
+        const ladybug = {
+            element: document.getElementById('ladybug'),
+            row: 1,
+            col: 1,
+            direction: 0, // 0:右 1:下 2:左 3:上
+            isMoving: false,
+            // 记录走过的路径（去重）
+            path: [],
+            // 任务进度：记录是否依次到达目标地点
+            taskProgress: {
+                bakery: false,    // 面包店(1,3)
+                fruitShop: false, // 水果店(3,3)
+                seafoodShop: false,// 海鲜店(3,1)
+                backHome: false   // 回到原地(1,1)
+            }
+        };
+
+        // 方向配置表
+        const directionMap = [
+            { rotate: 0, row: 0, col: 1 },   // 右
+            { rotate: 90, row: 1, col: 0 },  // 下
+            { rotate: 180, row: 0, col: -1 },// 左
+            { rotate: 270, row: -1, col: 0 } // 上
+        ];
+
+        // 初始化瓢虫
+        function initLadybug() {
+            ladybug.row = 1;
+            ladybug.col = 1;
+            ladybug.direction = 0;
+            // 重置任务进度
+            ladybug.taskProgress = {
+                bakery: false,
+                fruitShop: false,
+                seafoodShop: false,
+                backHome: false
+            };
+            // 重置路径记录
+            ladybug.path = [];
+            // 清空所有格子的路径样式
+            document.querySelectorAll('.grid-cell').forEach(cell => {
+                cell.style.backgroundColor = '';
+                cell.classList.remove('path');
+            });
+            updateLadybug();
+        }
+
+        // 更新路径样式，实现渐变透明度的绿色背景
+        function updatePathStyles() {
+            const pathLength = ladybug.path.length;
+            // 透明度范围：最新走的格子1（最绿），最早走的格子0.2（最淡）
+            const minOpacity = 0.2;
+            const maxOpacity = 1;
+
+            // 先清空所有路径格子的背景（避免样式残留）
+            document.querySelectorAll('.grid-cell.path').forEach(cell => {
+                cell.style.backgroundColor = '';
+            });
+
+            // 遍历路径，为每个格子设置渐变绿色
+            ladybug.path.forEach((pos, index) => {
+                const cell = document.querySelector(`.grid-cell[data-row="${pos.row}"][data-col="${pos.col}"]`);
+                if (cell) {
+                    cell.classList.add('path');
+                    // 计算透明度：索引越大（越新），透明度越高
+                    const opacity = pathLength === 1 
+                        ? maxOpacity 
+                        : minOpacity + (maxOpacity - minOpacity) * (index / (pathLength - 1));
+                    // 柔和的淡绿色
+                    cell.style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
+                }
+            });
+        }
+
+        // 更新瓢虫位置、朝向和任务进度
+        function updateLadybug() {
+            // 1. 移动瓢虫到目标格子
+            const targetCell = document.querySelector(`.grid-cell[data-row="${ladybug.row}"][data-col="${ladybug.col}"]`);
+            if (targetCell) {
+                targetCell.appendChild(ladybug.element);
+            }
+            
+            // 2. 设置朝向
+            ladybug.element.style.transform = `rotate(${directionMap[ladybug.direction].rotate}deg)`;
+
+            // 记录当前位置到路径（去重）
+            const currentPos = { row: ladybug.row, col: ladybug.col };
+            const isDuplicate = ladybug.path.some(pos => pos.row === currentPos.row && pos.col === currentPos.col);
+            if (!isDuplicate) {
+                ladybug.path.push({ ...currentPos });
+            }
+
+            // 更新路径样式
+            updatePathStyles();
+
+            // 3. 检查任务进度（必须按顺序）
+            checkTaskProgress();
+        }
+
+        // 生成洛谷AC特效的彩带
+        function createConfetti() {
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff']; // 彩虹色
+            const acModal = document.getElementById('ac-modal');
+            
+            // 生成100个彩带
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // 随机样式
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * -50}px`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = `${Math.random() * 10 + 5}px`;
+                confetti.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2-4秒
+                confetti.style.animationDelay = `${Math.random() * 2}s`; // 0-2秒延迟
+                
+                acModal.appendChild(confetti);
+                
+                // 动画结束后移除彩带
+                setTimeout(() => {
+                    confetti.remove();
+                }, 4000);
+            }
+        }
+
+        // 显示洛谷AC特效
+        function showACEffect() {
+            const acModal = document.getElementById('ac-modal');
+            acModal.style.display = 'flex';
+            // 生成彩带
+            createConfetti();
+            // 每隔500ms生成一次彩带，持续3秒
+            let confettiTimer = setInterval(() => {
+                createConfetti();
+            }, 500);
+            setTimeout(() => {
+                clearInterval(confettiTimer);
+            }, 3000);
+        }
+
+        // 检查任务进度（严格按顺序：面包店→水果店→海鲜店→原地）
+        function checkTaskProgress() {
+            const { row, col } = ladybug;
+            const { taskProgress } = ladybug;
+
+            // 第一步：到达面包店(1,3)
+            if (!taskProgress.bakery && row === 1 && col === 3) {
+                taskProgress.bakery = true;
+            }
+            // 第二步：到达水果店(3,3)（需先完成第一步）
+            else if (taskProgress.bakery && !taskProgress.fruitShop && row === 3 && col === 3) {
+                taskProgress.fruitShop = true;
+            }
+            // 第三步：到达海鲜店(3,1)（需先完成第二步）
+            else if (taskProgress.fruitShop && !taskProgress.seafoodShop && row === 3 && col === 1) {
+                taskProgress.seafoodShop = true;
+            }
+            // 第四步：回到原地(1,1)（需先完成第三步）
+            else if (taskProgress.seafoodShop && !taskProgress.backHome && row === 1 && col === 1) {
+                taskProgress.backHome = true;
+                // 显示洛谷AC特效（替换原来的弹窗）
+                showACEffect();
+            }
+        }
+
+        // 解析指令序列（处理循环逻辑）
+        function parseCommandSequence(commands) {
+            const parsedCommands = [];
+            let i = 0;
+
+            while (i < commands.length) {
+                // 检测循环指令（循环次数 + 循环开始 必须相邻）
+                if (commands[i].type === 'loop-count' && 
+                    i+1 < commands.length && 
+                    commands[i+1].type === 'loop-start') {
+                    
+                    // 获取循环次数
+                    const loopTimes = parseInt(commands[i].value) || 2;
+                    i += 2; // 跳过loop-count和loop-start
+                    
+                    // 找到对应的loop-end
+                    const loopEndIndex = commands.findIndex((cmd, idx) => 
+                        idx >= i && cmd.type === 'loop-end'
+                    );
+                    
+                    if (loopEndIndex === -1) {
+                        // 无匹配的loop-end，跳过
+                        i = commands.length;
+                        break;
+                    }
+                    
+                    // 提取循环体指令
+                    const loopBody = commands.slice(i, loopEndIndex);
+                    // 循环添加指令
+                    for (let j = 0; j < loopTimes; j++) {
+                        parsedCommands.push(...loopBody);
+                    }
+                    
+                    i = loopEndIndex + 1; // 跳过loop-end
+                } else {
+                    // 普通指令直接添加
+                    if (commands[i].type !== 'loop-end') { // 跳过孤立的loop-end
+                        parsedCommands.push(commands[i]);
+                    }
+                    i++;
+                }
+            }
+
+            return parsedCommands;
+        }
+
+        // 执行单个指令
+        function runCommand(cmd) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    switch(cmd.type) {
+                        case 'forward':
+                            // 前进一格
+                            const newRow = ladybug.row + directionMap[ladybug.direction].row;
+                            const newCol = ladybug.col + directionMap[ladybug.direction].col;
+                            // 边界检查
+                            if (newRow >= 1 && newRow <= 3 && newCol >= 1 && newCol <= 3) {
+                                ladybug.row = newRow;
+                                ladybug.col = newCol;
+                            }
+                            break;
+                        
+                        case 'left':
+                            // 原地左转（逆时针90°）
+                            ladybug.direction = (ladybug.direction - 1 + 4) % 4;
+                            break;
+                        
+                        case 'right':
+                            // 原地右转（顺时针90°）
+                            ladybug.direction = (ladybug.direction + 1) % 4;
+                            break;
+                    }
+
+                    // 更新瓢虫状态
+                    updateLadybug();
+                    resolve();
+                }, 800);
+            });
+        }
+
+        // 批量执行指令（含循环解析）
+        async function runAllCommands() {
+            if (ladybug.isMoving) return;
+            ladybug.isMoving = true;
+
+            // 1. 重置瓢虫和任务进度
+            initLadybug();
+            // 隐藏AC特效
+            document.getElementById('ac-modal').style.display = 'none';
+            // 清空现有彩带
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+
+            // 2. 获取指令栏中的指令
+            const cmdElements = document.querySelectorAll('#command-bar .command-item');
+            const rawCommands = Array.from(cmdElements).map(el => {
+                return {
+                    type: el.dataset.command,
+                    value: el.dataset.value || '' // 存储循环次数值
+                };
+            });
+
+            // 3. 解析循环指令，生成最终执行序列
+            const parsedCommands = parseCommandSequence(rawCommands);
+
+            // 4. 逐个执行指令
+            for (const cmd of parsedCommands) {
+                if (ladybug.taskProgress.backHome) break; // 完成任务则停止
+                await runCommand(cmd);
+            }
+
+            ladybug.isMoving = false;
+        }
+
+        // 重置游戏
+        function resetGame() {
+            // 清空指令栏
+            document.getElementById('command-bar').innerHTML = '';
+            // 隐藏AC特效
+            document.getElementById('ac-modal').style.display = 'none';
+            // 清空现有彩带
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+            // 重置瓢虫
+            initLadybug();
+            ladybug.isMoving = false;
+        }
+
+        // 初始化拖拽功能（支持拆分后的循环指令）
+        function initDrag() {
+            const bar = document.getElementById('command-bar');
+            const cmdNames = {
+                forward: '前进一格',
+                left: '原地左转',
+                right: '原地右转',
+                'loop-count': '循环次数',
+                'loop-start': '循环开始',
+                'loop-end': '循环结束'
+            };
+
+            // 通用拖拽开始处理
+            document.querySelectorAll('[draggable="true"]').forEach(btn => {
+                btn.ondragstart = (e) => {
+                    // 存储指令类型和值（循环次数特殊处理）
+                    const cmdType = btn.dataset.command;
+                    let cmdValue = '';
+                    
+                    // 如果是循环次数，获取输入的数字
+                    if (cmdType === 'loop-count') {
+                        const numInput = btn.querySelector('.loop-num');
+                        cmdValue = numInput.value;
+                        // 同步更新所有循环次数按钮的数值
+                        document.querySelectorAll('.loop-num').forEach(input => {
+                            input.value = numInput.value;
+                        });
+                    }
+                    
+                    e.dataTransfer.setData('cmd', JSON.stringify({
+                        type: cmdType,
+                        value: cmdValue
+                    }));
+                };
+            });
+
+            // 允许放置
+            bar.ondragover = (e) => e.preventDefault();
+
+            // 放置指令处理（核心：循环开始/结束统一样式）
+            bar.ondrop = (e) => {
+                e.preventDefault();
+                if (ladybug.isMoving) return;
+                
+                // 解析拖拽数据
+                const cmdData = JSON.parse(e.dataTransfer.getData('cmd'));
+                const { type, value } = cmdData;
+
+                // 创建指令项
+                const item = document.createElement('div');
+                // 分配样式类（核心：循环开始/结束统一为loop-pair-item）
+                if (type === 'loop-count') {
+                    item.className = 'command-item loop-count-item';
+                } else if (type === 'loop-start' || type === 'loop-end') {
+                    item.className = 'command-item loop-pair-item';
+                } else {
+                    item.className = 'command-item normal-item';
+                }
+                
+                item.dataset.command = type;
+                
+                // 设置显示文字和值
+                if (type === 'loop-count') {
+                    item.dataset.value = value;
+                    item.textContent = `循环${value}次`;
+                } else {
+                    item.textContent = cmdNames[type];
+                }
+
+                // 点击删除指令项
+                item.onclick = () => {
+                    if (!ladybug.isMoving) item.remove();
+                };
+                
+                bar.appendChild(item);
+            };
+
+            // 循环次数输入框实时更新（优化交互）
+            document.querySelectorAll('.loop-num').forEach(input => {
+                // 聚焦时高亮边框
+                input.onfocus = function() {
+                    this.style.borderColor = '#ffd700';
+                    this.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                };
+                // 失焦时恢复样式
+                input.onblur = function() {
+                    this.style.borderColor = '#fff';
+                    this.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                    // 失焦时强制校验数值范围
+                    if (this.value < 1) this.value = 1;
+                    if (this.value > 10) this.value = 10;
+                };
+                // 输入时实时校验
+                input.oninput = function() {
+                    // 限制数值范围
+                    if (this.value < 1) this.value = 1;
+                    if (this.value > 10) this.value = 10;
+                    // 同步所有循环次数输入框
+                    document.querySelectorAll('.loop-num').forEach(i => {
+                        i.value = this.value;
+                    });
+                };
+            });
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            document.getElementById('start-btn').onclick = runAllCommands;
+            document.getElementById('reset-btn').onclick = resetGame;
+            document.getElementById('ac-reset-btn').onclick = resetGame;
+        }
+
+        // 初始化游戏
+        window.onload = () => {
+            initLadybug();
+            initDrag();
+            bindEvents();
+        };
+    </script>
+</body>
+</html>

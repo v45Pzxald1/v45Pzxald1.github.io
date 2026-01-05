@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瓢虫移动游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px 40px;
+            gap: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow-x: hidden; /* 防止彩带动画溢出横向滚动 */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .map-container {
+            margin-bottom: 30px;
+            align-self: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 5px;
+            background-color: #ddd;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .grid-cell {
+            background-color: #fff;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 路径过渡效果 */
+            transition: background-color 0.5s ease;
+        }
+
+        /* 走过的路径格子样式（渐变绿色） */
+        .grid-cell.path {
+            transition: background-color 0.5s ease;
+        }
+
+        .ladybug {
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='40' ry='35' fill='%23e74c3c'/%3E%3Ccircle cx='75' cy='50' r='15' fill='%23000'/%3E%3Cpath d='M85 50 L95 40 L100 35' stroke='%23000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M85 50 L95 60 L100 65' stroke='%23000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='70' cy='45' r='4' fill='%23fff'/%3E%3Ccircle cx='70' cy='55' r='4' fill='%23fff'/%3E%3Ccircle cx='30' cy='35' r='8' fill='%23000'/%3E%3Ccircle cx='30' cy='65' r='8' fill='%23000'/%3E%3Ccircle cx='50' cy='30' r='8' fill='%23000'/%3E%3Ccircle cx='50' cy='70' r='8' fill='%23000'/%3E%3C/svg%3E");
+            background-size: cover;
+            position: absolute;
+            transition: transform 0.5s ease;
+            transform: rotate(0deg);
+            z-index: 10;
+        }
+
+        .end-point {
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%232ecc71'/%3E%3Cpath d='M30 50 L45 65 L70 40' stroke='%23fff' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-size: cover;
+        }
+
+        .commands {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .command-pool {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .command-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: move;
+            font-size: 16px;
+        }
+
+        .command-bar {
+            display: flex;
+            gap: 10px;
+            padding: 20px 25px;
+            background-color: #eee;
+            border-radius: 8px;
+            min-height: 80px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .command-item {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            align-self: center;
+        }
+
+        .control-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #start-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        #reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* ========== 洛谷AC特效样式 ========== */
+        /* 全屏遮罩 */
+        .ac-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        /* AC文字容器 */
+        .ac-content {
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* AC大文字 */
+        .ac-text {
+            font-size: 120px;
+            font-weight: bold;
+            color: #4CAF50;
+            text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF50;
+            animation: acPulse 2s ease-in-out infinite, acScale 1s ease-out;
+        }
+
+        /* 副标题 */
+        .ac-subtext {
+            font-size: 30px;
+            color: #fff;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #fff;
+            animation: acFadeIn 1.5s ease-out;
+        }
+
+        /* 重置按钮 */
+        .ac-reset-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #4CAF50;
+            transition: all 0.3s ease;
+            animation: acFadeIn 2s ease-out;
+        }
+
+        .ac-reset-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #4CAF50;
+        }
+
+        /* 彩带元素 */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.8;
+            animation: confettiFall 3s ease-in-out forwards;
+        }
+
+        /* ========== 动画关键帧 ========== */
+        /* AC文字脉冲 */
+        @keyframes acPulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF50;
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 30px #4CAF50, 0 0 60px #4CAF50, 0 0 80px #4CAF50;
+            }
+        }
+
+        /* AC文字缩放入场 */
+        @keyframes acScale {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 渐入动画 */
+        @keyframes acFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 彩带飘落动画 */
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 右侧答案区样式 - 适配列删除后的布局 */
+        .answers-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 60px;
+            width: 400px;
+            flex-shrink: 0;
+        }
+
+        .answers-container h2 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .answers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .answers-table th, .answers-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .answers-table th {
+            background-color: #f8f8f8;
+            font-weight: normal;
+            color: #666;
+        }
+
+        .answer-row {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            background-color: #fafafa;
+        }
+
+        .answer-row.active {
+            opacity: 1;
+            pointer-events: auto;
+            background-color: #d4edda;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                gap: 30px;
+            }
+            .game-container {
+                align-items: center;
+                max-width: 100%;
+            }
+            .answers-container {
+                margin-top: 30px;
+                width: 100%;
+                max-width: 600px;
+            }
+            /* 响应式AC文字 */
+            .ac-text {
+                font-size: 80px;
+            }
+            .ac-subtext {
+                font-size: 24px;
+            }
+            .ac-reset-btn {
+                padding: 12px 30px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧游戏区 -->
+    <div class="game-container">
+        <h1>瓢虫移动大冒险</h1>
+
+        <div class="map-container">
+            <div class="grid">
+                <div class="grid-cell" data-row="1" data-col="1">
+                    <div class="ladybug" id="ladybug"></div>
+                </div>
+                <div class="grid-cell" data-row="1" data-col="2"></div>
+                <div class="grid-cell" data-row="1" data-col="3"></div>
+                <div class="grid-cell" data-row="2" data-col="1"></div>
+                <div class="grid-cell" data-row="2" data-col="2"></div>
+                <div class="grid-cell" data-row="2" data-col="3"></div>
+                <div class="grid-cell" data-row="3" data-col="1"></div>
+                <div class="grid-cell" data-row="3" data-col="2"></div>
+                <div class="grid-cell" data-row="3" data-col="3">
+                    <div class="end-point"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="commands">
+            <div class="command-pool">
+                <!-- 文字修改1：按钮文字替换 -->
+                <div class="command-btn" draggable="true" data-command="forward">前进一格</div>
+                <div class="command-btn" draggable="true" data-command="left">原地左转</div>
+                <div class="command-btn" draggable="true" data-command="right">原地右转</div>
+            </div>
+            <div class="command-bar" id="command-bar"></div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" id="start-btn">开始移动</button>
+            <button class="control-btn" id="reset-btn">重置游戏</button>
+        </div>
+
+        <!-- 洛谷AC风格特效容器（替换原来的胜利弹窗） -->
+        <div class="ac-modal" id="ac-modal">
+            <div class="ac-content">
+                <div class="ac-text">AC!</div>
+                <div class="ac-subtext">恭喜！所有路径都完成啦 🎉</div>
+                <button class="ac-reset-btn" id="ac-reset-btn">再来一次</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧答案区 - 修改2：删除路径顺序列，仅保留序号和指令序列 -->
+    <div class="answers-container">
+        <h2>正确答案（完成后亮起）</h2>
+        <table class="answers-table">
+            <thead>
+                <tr>
+                    <th>方式</th>
+                    <th>指令序列</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="answer-row" data-index="0">
+                    <td>1</td>
+                    <td>前进一格 → 前进一格 → 原地右转 → 前进一格 → 前进一格</td>
+                </tr>
+                <tr class="answer-row" data-index="1">
+                    <td>2</td>
+                    <td>前进一格 → 原地右转 → 前进一格 → 原地左转 → 前进一格 → 原地右转 → 前进一格</td>
+                </tr>
+                <tr class="answer-row" data-index="2">
+                    <td>3</td>
+                    <td>前进一格 → 原地右转 → 前进一格 → 前进一格 → 原地左转 → 前进一格</td>
+                </tr>
+                <tr class="answer-row" data-index="3">
+                    <td>4</td>
+                    <td>原地右转 → 前进一格 → 原地左转 → 前进一格 → 前进一格 → 原地右转 → 前进一格</td>
+                </tr>
+                <tr class="answer-row" data-index="4">
+                    <td>5</td>
+                    <td>原地右转 → 前进一格 → 原地左转 → 前进一格 → 原地右转 → 前进一格 → 原地左转 → 前进一格</td>
+                </tr>
+                <tr class="answer-row" data-index="5">
+                    <td>6</td>
+                    <td>原地右转 → 前进一格 → 前进一格 → 原地左转 → 前进一格 → 前进一格</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // 瓢虫核心状态（新增路径记录）
+        const ladybug = {
+            element: document.getElementById('ladybug'),
+            row: 1,
+            col: 1,
+            direction: 0, // 0:右 1:下 2:左 3:上
+            isMoving: false,
+            // 记录走过的路径（去重）
+            path: []
+        };
+
+        // 方向配置表
+        const directionMap = [
+            { rotate: 0, row: 0, col: 1 },   // 右
+            { rotate: 90, row: 1, col: 0 },  // 下
+            { rotate: 180, row: 0, col: -1 },// 左
+            { rotate: 270, row: -1, col: 0 } // 上
+        ];
+
+        // 6种正确的指令序列（逻辑不变，仅前端显示文字修改）
+        const correctAnswers = [
+            ['forward', 'forward', 'right', 'forward', 'forward'],       
+            ['forward', 'right', 'forward', 'left', 'forward', 'right', 'forward'], 
+            ['forward', 'right', 'forward', 'forward', 'left', 'forward'], 
+            ['right', 'forward', 'left', 'forward', 'forward', 'right', 'forward'], 
+            ['right', 'forward', 'left', 'forward', 'right', 'forward', 'left', 'forward'], 
+            ['right', 'forward', 'forward', 'left', 'forward', 'forward']  
+        ];
+
+        // 更新路径样式，实现渐变透明度的绿色背景
+        function updatePathStyles() {
+            const pathLength = ladybug.path.length;
+            // 透明度范围：最新走的格子1（最绿），最早走的格子0.2（最淡）
+            const minOpacity = 0.2;
+            const maxOpacity = 1;
+
+            // 先清空所有路径格子的背景（避免样式残留）
+            document.querySelectorAll('.grid-cell.path').forEach(cell => {
+                cell.style.backgroundColor = '';
+            });
+
+            // 遍历路径，为每个格子设置渐变绿色
+            ladybug.path.forEach((pos, index) => {
+                const cell = document.querySelector(`.grid-cell[data-row="${pos.row}"][data-col="${pos.col}"]`);
+                if (cell) {
+                    cell.classList.add('path');
+                    // 计算透明度：索引越大（越新），透明度越高
+                    const opacity = pathLength === 1 
+                        ? maxOpacity 
+                        : minOpacity + (maxOpacity - minOpacity) * (index / (pathLength - 1));
+                    // 柔和的淡绿色
+                    cell.style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
+                }
+            });
+        }
+
+        // 初始化瓢虫
+        function initLadybug() {
+            ladybug.row = 1;
+            ladybug.col = 1;
+            ladybug.direction = 0;
+            // 重置路径记录
+            ladybug.path = [];
+            // 清空所有格子的路径样式
+            document.querySelectorAll('.grid-cell').forEach(cell => {
+                cell.style.backgroundColor = '';
+                cell.classList.remove('path');
+            });
+            updateLadybug();
+        }
+
+        // 生成洛谷AC特效的彩带
+        function createConfetti() {
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff']; // 彩虹色
+            const acModal = document.getElementById('ac-modal');
+            
+            // 生成100个彩带
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // 随机样式
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * -50}px`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = `${Math.random() * 10 + 5}px`;
+                confetti.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2-4秒
+                confetti.style.animationDelay = `${Math.random() * 2}s`; // 0-2秒延迟
+                
+                acModal.appendChild(confetti);
+                
+                // 动画结束后移除彩带
+                setTimeout(() => {
+                    confetti.remove();
+                }, 4000);
+            }
+        }
+
+        // 显示洛谷AC特效
+        function showACEffect() {
+            const acModal = document.getElementById('ac-modal');
+            acModal.style.display = 'flex';
+            // 生成彩带
+            createConfetti();
+            // 每隔500ms生成一次彩带，持续3秒
+            let confettiTimer = setInterval(() => {
+                createConfetti();
+            }, 500);
+            setTimeout(() => {
+                clearInterval(confettiTimer);
+            }, 3000);
+        }
+
+        // 检测是否所有答案都已完成（6行都激活）
+        function checkAllAnswersCompleted() {
+            const allAnswerRows = document.querySelectorAll('.answer-row');
+            // 检查每一行是否都有active类
+            return Array.from(allAnswerRows).every(row => row.classList.contains('active'));
+        }
+
+        // 更新瓢虫的位置、朝向和路径显示
+        function updateLadybug() {
+            const targetCell = document.querySelector(`.grid-cell[data-row="${ladybug.row}"][data-col="${ladybug.col}"]`);
+            if (!targetCell) return;
+            targetCell.appendChild(ladybug.element);
+            ladybug.element.style.transform = `rotate(${directionMap[ladybug.direction].rotate}deg)`;
+
+            // 记录当前位置到路径（去重）
+            const currentPos = { row: ladybug.row, col: ladybug.col };
+            const isDuplicate = ladybug.path.some(pos => pos.row === currentPos.row && pos.col === currentPos.col);
+            if (!isDuplicate) {
+                ladybug.path.push({ ...currentPos });
+            }
+
+            // 更新路径样式
+            updatePathStyles();
+        }
+
+        // 执行单个指令
+        function runCommand(cmd) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    switch(cmd) {
+                        case 'forward':
+                            const newRow = ladybug.row + directionMap[ladybug.direction].row;
+                            const newCol = ladybug.col + directionMap[ladybug.direction].col;
+                            if (newRow >= 1 && newRow <= 3 && newCol >= 1 && newCol <= 3) {
+                                ladybug.row = newRow;
+                                ladybug.col = newCol;
+                            }
+                            break;
+                        case 'left':
+                            ladybug.direction = (ladybug.direction - 1 + 4) % 4;
+                            break;
+                        case 'right':
+                            ladybug.direction = (ladybug.direction + 1) % 4;
+                            break;
+                    }
+                    updateLadybug();
+                    resolve();
+                }, 800);
+            });
+        }
+
+        // 对比用户序列和正确答案，匹配则高亮
+        function checkAnswer(userCommands) {
+            for (let i = 0; i < correctAnswers.length; i++) {
+                const correctSeq = correctAnswers[i];
+                if (userCommands.length !== correctSeq.length) continue;
+                const isMatch = userCommands.every((cmd, idx) => cmd === correctSeq[idx]);
+                if (isMatch) {
+                    document.querySelector(`.answer-row[data-index="${i}"]`).classList.add('active');
+                }
+            }
+        }
+
+        // 批量执行指令
+        async function runAllCommands() {
+            if (ladybug.isMoving) return;
+            ladybug.isMoving = true;
+
+            initLadybug();
+            // 隐藏AC特效
+            document.getElementById('ac-modal').style.display = 'none';
+            // 清空现有彩带
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+            
+            const cmdElements = document.querySelectorAll('#command-bar .command-item');
+            const userCommands = Array.from(cmdElements).map(el => el.dataset.command);
+
+            for (const cmd of userCommands) {
+                await runCommand(cmd);
+                if (ladybug.row === 3 && ladybug.col === 3) break;
+            }
+
+            // 只有瓢虫到达终点才检查答案并判断是否显示AC
+            if (ladybug.row === 3 && ladybug.col === 3) {
+                // 高亮匹配的答案行
+                checkAnswer(userCommands);
+                // 检查是否所有6种方式都完成了
+                if (checkAllAnswersCompleted()) {
+                    // 所有答案都完成，显示AC特效
+                    showACEffect();
+                }
+            }
+
+            ladybug.isMoving = false;
+        }
+
+        // 重置游戏（保留已点亮答案）
+        function resetGame() {
+            document.getElementById('command-bar').innerHTML = '';
+            // 隐藏AC特效
+            document.getElementById('ac-modal').style.display = 'none';
+            // 清空现有彩带
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+            initLadybug();
+            ladybug.isMoving = false;
+        }
+
+        // 初始化拖拽功能 - 修改3：拖拽生成的指令项文字替换
+        function initDrag() {
+            const btns = document.querySelectorAll('.command-btn');
+            const bar = document.getElementById('command-bar');
+
+            btns.forEach(btn => {
+                btn.ondragstart = (e) => {
+                    e.dataTransfer.setData('cmd', btn.dataset.command);
+                };
+            });
+
+            bar.ondragover = (e) => e.preventDefault();
+
+            bar.ondrop = (e) => {
+                e.preventDefault();
+                if (ladybug.isMoving) return;
+                
+                const cmd = e.dataTransfer.getData('cmd');
+                // 文字修改2：指令项显示文字替换
+                const cmdNames = { forward: '前进一格', left: '原地左转', right: '原地右转' };
+                
+                const item = document.createElement('div');
+                item.className = 'command-item';
+                item.dataset.command = cmd;
+                item.textContent = cmdNames[cmd];
+                item.onclick = () => {
+                    if (!ladybug.isMoving) item.remove();
+                };
+                
+                bar.appendChild(item);
+            };
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            document.getElementById('start-btn').onclick = runAllCommands;
+            document.getElementById('reset-btn').onclick = resetGame;
+            document.getElementById('ac-reset-btn').onclick = resetGame;
+        }
+
+        // 初始化游戏
+        window.onload = () => {
+            initLadybug();
+            initDrag();
+            bindEvents();
+        };
+    </script>
+</body>
+</html>
