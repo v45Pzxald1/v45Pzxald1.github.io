@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 关键：设置视口适配各种屏幕 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不插电编程 主题一</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+
+        /* 页面背景 */
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 标题容器 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+
+        /* 标题样式 */
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* 链接卡片容器 - 简化自适应布局，避免计算偏差 */
+        .link-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            /* 新增：确保容器高度自适应，不会遮挡子元素 */
+            min-height: fit-content;
+        }
+
+        /* 单个链接卡片样式 - 简化宽度逻辑，优先用flex-basis */
+        .link-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            /* 核心修改：用flex-basis替代复杂的calc，更稳定 */
+            flex-basis: 280px;
+            /* 让卡片在空间足够时自动填充，不足时收缩 */
+            flex-grow: 1;
+            flex-shrink: 1;
+            max-width: 280px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* 卡片悬浮效果 */
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 链接样式 */
+        .link-card a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: block;
+        }
+
+        /* 链接悬浮颜色变化 */
+        .link-card a:hover {
+            color: #2980b9;
+        }
+
+        /* 响应式调整：简化断点逻辑，避免计算错误 */
+        @media (max-width: 992px) {
+            .link-card {
+                flex-basis: calc(50% - 12.5px);
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .link-card {
+                flex-basis: 100%;
+                max-width: none;
+            }
+        }
+
+        /* 空内容区域样式 */
+        .empty-content {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标题区域 -->
+    <div class="header">
+        <h1>不插电编程 主题一</h1>
+    </div>
+
+    <!-- 链接卡片容器（移除多余空白） -->
+    <div class="link-container">
+        <div class="link-card">
+            <a href="order.html">顺序</a>
+            <p class="empty-content">Order</p>
+        </div>
+
+        <div class="link-card">
+            <a href="loop.html">循环1</a>
+            <p class="empty-content">Loop</p>
+        </div>
+
+        <div class="link-card">
+            <a href="loop2.html">循环2</a>
+            <p class="empty-content">Loop</p>
+        </div>
+
+        <div class="link-card">
+            <a href="select.html">选择1</a>
+            <p class="empty-content">Select</p>
+        </div>
+
+        <div class="link-card">
+            <a href="select2.html">选择2</a>
+            <p class="empty-content">Select</p>
+        </div>
+
+        <div class="link-card">
+            <a href="lottery.html">摇号</a>
+            <p class="empty-content">抽奖</p>
+        </div>
+    </div>
+</body>
+</html>

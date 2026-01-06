@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运摇号抽签</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .lottery-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .number-display {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #444;
+            margin: 30px 0;
+            height: 120px;
+            line-height: 120px;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* 摇号动画效果 */
+        .rolling {
+            animation: shake 0.1s infinite;
+            color: #667eea;
+        }
+
+        @keyframes shake {
+            0% { transform: translateY(-5px); }
+            50% { transform: translateY(5px); }
+            100% { transform: translateY(-5px); }
+        }
+
+        .settings {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .settings label {
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .settings input {
+            width: 80px;
+            padding: 10px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .settings input:focus {
+            border-color: #667eea;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .start-btn {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .stop-btn {
+            background: linear-gradient(90deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .stop-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .result-tip {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #764ba2;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .result-tip.show {
+            opacity: 1;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 480px) {
+            .lottery-container {
+                padding: 25px;
+            }
+            .number-display {
+                font-size: 6rem;
+                height: 100px;
+                line-height: 100px;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lottery-container">
+        <h1 class="title">幸运摇号抽签</h1>
+        <p class="subtitle">点击开始按钮摇号，停止后显示结果</p>
+        
+        <div class="settings">
+            <label for="max-number">摇号范围：1 -</label>
+            <input type="number" id="max-number" min="1" value="5" oninput="validateInput(this)">
+        </div>
+
+        <div class="number-display" id="number-display">1</div>
+
+        <div class="btn-group">
+            <button class="btn start-btn" id="start-btn" onclick="startLottery()">开始摇号</button>
+            <button class="btn stop-btn" id="stop-btn" onclick="stopLottery()" disabled>停止摇号</button>
+        </div>
+
+        <div class="result-tip" id="result-tip">恭喜！中签号码是：</div>
+    </div>
+
+    <script>
+        // 全局变量
+        let lotteryInterval = null;
+        let maxNumber = 5;
+        const numberDisplay = document.getElementById('number-display');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const resultTip = document.getElementById('result-tip');
+
+        // 验证输入框，确保输入正整数
+        function validateInput(input) {
+            // 移除非数字字符
+            input.value = input.value.replace(/[^0-9]/g, '');
+            // 确保最小值为1
+            if (input.value < 1) {
+                input.value = 1;
+            }
+            // 更新最大数值
+            maxNumber = parseInt(input.value);
+        }
+
+        // 开始摇号
+        function startLottery() {
+            // 更新最大数值（防止输入框修改后未触发验证的情况）
+            maxNumber = parseInt(document.getElementById('max-number').value) || 5;
+            
+            // 禁用开始按钮，启用停止按钮
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            // 隐藏结果提示
+            resultTip.classList.remove('show');
+            
+            // 添加滚动动画
+            numberDisplay.classList.add('rolling');
+            
+            // 开始随机切换数字
+            lotteryInterval = setInterval(() => {
+                const randomNum = Math.floor(Math.random() * maxNumber) + 1;
+                numberDisplay.textContent = randomNum;
+            }, 80); // 数字切换速度，越小越快
+        }
+
+        // 停止摇号
+        function stopLottery() {
+            // 清除定时器
+            clearInterval(lotteryInterval);
+            lotteryInterval = null;
+            
+            // 启用开始按钮，禁用停止按钮
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            // 移除滚动动画
+            numberDisplay.classList.remove('rolling');
+            
+            // 显示结果提示
+            resultTip.textContent = `恭喜！中签号码是：${numberDisplay.textContent}`;
+            resultTip.classList.add('show');
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            validateInput(document.getElementById('max-number'));
+        }
+    </script>
+</body>
+</html>

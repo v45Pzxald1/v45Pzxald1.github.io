@@ -12,29 +12,45 @@
             font-family: "Microsoft YaHei", sans-serif;
         }
 
+        /* 核心修改：body改为纵向排列，整体居中 */
         body {
             background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column; /* 适配顶部标题的纵向布局 */
+            justify-content: flex-start;
+            align-items: center; /* 让所有子元素整体居中 */
+            padding: 20px 40px;
+            gap: 20px; /* 标题和下方内容的间距 */
+            max-width: 1400px;
+            margin: 0 auto; /* body本身在页面居中 */
+            overflow-x: hidden; /* 防止彩带动画溢出横向滚动 */
+        }
+
+        /* 标题样式：顶部居中，放大字体 */
+        h1 {
+            color: #333;
+            text-align: center; /* 文字居中 */
+            margin: 10px 0 20px 0; /* 上下间距 */
+            font-size: 28px; /* 放大标题更醒目 */
+            width: 100%; /* 占满宽度，居中更彻底 */
+            font-weight: bold;
+        }
+
+        /* 新增：包裹游戏区和答案区，保持横向排列 */
+        .main-content {
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: flex-start;
-            padding: 20px 40px;
-            gap: 80px;
+            gap: 80px; /* 保留原有间距 */
+            width: 100%;
             max-width: 1400px;
-            margin: 0 auto;
-            overflow-x: hidden; /* 防止彩带动画溢出横向滚动 */
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
         }
 
         .game-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center; /* 改为居中，优化游戏区内元素布局 */
             width: 100%;
             max-width: 800px;
         }
@@ -61,7 +77,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* 路径过渡效果 */
             transition: background-color 0.5s ease;
         }
 
@@ -155,8 +170,7 @@
             color: white;
         }
 
-        /* ========== 洛谷AC特效样式 ========== */
-        /* 全屏遮罩 */
+        /* 洛谷AC特效样式 */
         .ac-modal {
             position: fixed;
             top: 0;
@@ -171,14 +185,12 @@
             overflow: hidden;
         }
 
-        /* AC文字容器 */
         .ac-content {
             text-align: center;
             position: relative;
             z-index: 100;
         }
 
-        /* AC大文字 */
         .ac-text {
             font-size: 120px;
             font-weight: bold;
@@ -187,7 +199,6 @@
             animation: acPulse 2s ease-in-out infinite, acScale 1s ease-out;
         }
 
-        /* 副标题 */
         .ac-subtext {
             font-size: 30px;
             color: #fff;
@@ -196,7 +207,6 @@
             animation: acFadeIn 1.5s ease-out;
         }
 
-        /* 重置按钮 */
         .ac-reset-btn {
             margin-top: 40px;
             padding: 15px 40px;
@@ -227,8 +237,7 @@
             animation: confettiFall 3s ease-in-out forwards;
         }
 
-        /* ========== 动画关键帧 ========== */
-        /* AC文字脉冲 */
+        /* 动画关键帧 */
         @keyframes acPulse {
             0%, 100% {
                 transform: scale(1);
@@ -240,7 +249,6 @@
             }
         }
 
-        /* AC文字缩放入场 */
         @keyframes acScale {
             0% {
                 transform: scale(0);
@@ -255,7 +263,6 @@
             }
         }
 
-        /* 渐入动画 */
         @keyframes acFadeIn {
             0% {
                 opacity: 0;
@@ -267,7 +274,6 @@
             }
         }
 
-        /* 彩带飘落动画 */
         @keyframes confettiFall {
             0% {
                 transform: translateY(-10px) rotate(0deg);
@@ -279,14 +285,14 @@
             }
         }
 
-        /* 右侧答案区样式 - 适配列删除后的布局 */
+        /* 右侧答案区样式 */
         .answers-container {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin-top: 60px;
-            width: 400px;
+            margin-top: 0; /* 移除原有top margin，由main-content的gap控制 */
+            width: 700px;
             flex-shrink: 0;
         }
 
@@ -329,24 +335,35 @@
             font-weight: bold;
         }
 
+        /* 路径示意图容器样式 */
+        .path-svg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+        .path-svg svg {
+            width: 120px;
+            height: 120px;
+        }
+
         /* 响应式调整 */
         @media (max-width: 900px) {
             body {
-                flex-direction: column;
-                align-items: center;
                 padding: 20px;
+                gap: 15px;
+            }
+            .main-content {
+                flex-direction: column;
                 gap: 30px;
             }
             .game-container {
-                align-items: center;
                 max-width: 100%;
             }
             .answers-container {
-                margin-top: 30px;
                 width: 100%;
                 max-width: 600px;
             }
-            /* 响应式AC文字 */
             .ac-text {
                 font-size: 80px;
             }
@@ -357,105 +374,116 @@
                 padding: 12px 30px;
                 font-size: 18px;
             }
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 左侧游戏区 -->
-    <div class="game-container">
-        <h1>瓢虫移动大冒险</h1>
+    <!-- 标题移到最顶部，全局居中 -->
+    <h1>瓢虫移动大冒险</h1>
 
-        <div class="map-container">
-            <div class="grid">
-                <div class="grid-cell" data-row="1" data-col="1">
-                    <div class="ladybug" id="ladybug"></div>
+    <!-- 游戏区+答案区容器，保持横向排列 -->
+    <div class="main-content">
+        <!-- 左侧游戏区 -->
+        <div class="game-container">
+            <div class="map-container">
+                <div class="grid">
+                    <div class="grid-cell" data-row="1" data-col="1">
+                        <div class="ladybug" id="ladybug"></div>
+                    </div>
+                    <div class="grid-cell" data-row="1" data-col="2"></div>
+                    <div class="grid-cell" data-row="1" data-col="3"></div>
+                    <div class="grid-cell" data-row="2" data-col="1"></div>
+                    <div class="grid-cell" data-row="2" data-col="2"></div>
+                    <div class="grid-cell" data-row="2" data-col="3"></div>
+                    <div class="grid-cell" data-row="3" data-col="1"></div>
+                    <div class="grid-cell" data-row="3" data-col="2"></div>
+                    <div class="grid-cell" data-row="3" data-col="3">
+                        <div class="end-point"></div>
+                    </div>
                 </div>
-                <div class="grid-cell" data-row="1" data-col="2"></div>
-                <div class="grid-cell" data-row="1" data-col="3"></div>
-                <div class="grid-cell" data-row="2" data-col="1"></div>
-                <div class="grid-cell" data-row="2" data-col="2"></div>
-                <div class="grid-cell" data-row="2" data-col="3"></div>
-                <div class="grid-cell" data-row="3" data-col="1"></div>
-                <div class="grid-cell" data-row="3" data-col="2"></div>
-                <div class="grid-cell" data-row="3" data-col="3">
-                    <div class="end-point"></div>
+            </div>
+
+            <div class="commands">
+                <div class="command-pool">
+                    <div class="command-btn" draggable="true" data-command="forward">前进一格</div>
+                    <div class="command-btn" draggable="true" data-command="left">原地左转</div>
+                    <div class="command-btn" draggable="true" data-command="right">原地右转</div>
+                </div>
+                <div class="command-bar" id="command-bar"></div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" id="start-btn">开始</button>
+                <button class="control-btn" id="reset-btn">重置</button>
+            </div>
+
+            <div class="ac-modal" id="ac-modal">
+                <div class="ac-content">
+                    <div class="ac-text">AC!</div>
+                    <div class="ac-subtext">恭喜！所有路径都完成啦 🎉</div>
+                    <button class="ac-reset-btn" id="ac-reset-btn">再来一次</button>
                 </div>
             </div>
         </div>
 
-        <div class="commands">
-            <div class="command-pool">
-                <!-- 文字修改1：按钮文字替换 -->
-                <div class="command-btn" draggable="true" data-command="forward">前进一格</div>
-                <div class="command-btn" draggable="true" data-command="left">原地左转</div>
-                <div class="command-btn" draggable="true" data-command="right">原地右转</div>
-            </div>
-            <div class="command-bar" id="command-bar"></div>
+        <!-- 右侧答案区 -->
+        <div class="answers-container">
+            <h2>正确答案</h2>
+            <table class="answers-table">
+                <thead>
+                    <tr>
+                        <th>方式</th>
+                        <th>路径示意图</th>
+                        <th>指令序列</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="answer-row" data-index="0">
+                        <td>1</td>
+                        <td><div class="path-svg"></div></td>
+                        <td>前进一格 → 前进一格 → 原地右转 → 前进一格 → 前进一格</td>
+                    </tr>
+                    <tr class="answer-row" data-index="1">
+                        <td>2</td>
+                        <td><div class="path-svg"></div></td>
+                        <td>前进一格 → 原地右转 → 前进一格 → 原地左转 → 前进一格 → 原地右转 → 前进一格</td>
+                    </tr>
+                    <tr class="answer-row" data-index="2">
+                        <td>3</td>
+                        <td><div class="path-svg"></div></td>
+                        <td>前进一格 → 原地右转 → 前进一格 → 前进一格 → 原地左转 → 前进一格</td>
+                    </tr>
+                    <tr class="answer-row" data-index="3">
+                        <td>4</td>
+                        <td><div class="path-svg"></div></td>
+                        <td>原地右转 → 前进一格 → 原地左转 → 前进一格 → 前进一格 → 原地右转 → 前进一格</td>
+                    </tr>
+                    <tr class="answer-row" data-index="4">
+                        <td>5</td>
+                        <td><div class="path-svg"></div></td>
+                        <td>原地右转 → 前进一格 → 原地左转 → 前进一格 → 原地右转 → 前进一格 → 原地左转 → 前进一格</td>
+                    </tr>
+                    <tr class="answer-row" data-index="5">
+                        <td>6</td>
+                        <td><div class="path-svg"></div></td>
+                        <td>原地右转 → 前进一格 → 前进一格 → 原地左转 → 前进一格 → 前进一格</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <div class="controls">
-            <button class="control-btn" id="start-btn">开始移动</button>
-            <button class="control-btn" id="reset-btn">重置游戏</button>
-        </div>
-
-        <!-- 洛谷AC风格特效容器（替换原来的胜利弹窗） -->
-        <div class="ac-modal" id="ac-modal">
-            <div class="ac-content">
-                <div class="ac-text">AC!</div>
-                <div class="ac-subtext">恭喜！所有路径都完成啦 🎉</div>
-                <button class="ac-reset-btn" id="ac-reset-btn">再来一次</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 右侧答案区 - 修改2：删除路径顺序列，仅保留序号和指令序列 -->
-    <div class="answers-container">
-        <h2>正确答案（完成后亮起）</h2>
-        <table class="answers-table">
-            <thead>
-                <tr>
-                    <th>方式</th>
-                    <th>指令序列</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="answer-row" data-index="0">
-                    <td>1</td>
-                    <td>前进一格 → 前进一格 → 原地右转 → 前进一格 → 前进一格</td>
-                </tr>
-                <tr class="answer-row" data-index="1">
-                    <td>2</td>
-                    <td>前进一格 → 原地右转 → 前进一格 → 原地左转 → 前进一格 → 原地右转 → 前进一格</td>
-                </tr>
-                <tr class="answer-row" data-index="2">
-                    <td>3</td>
-                    <td>前进一格 → 原地右转 → 前进一格 → 前进一格 → 原地左转 → 前进一格</td>
-                </tr>
-                <tr class="answer-row" data-index="3">
-                    <td>4</td>
-                    <td>原地右转 → 前进一格 → 原地左转 → 前进一格 → 前进一格 → 原地右转 → 前进一格</td>
-                </tr>
-                <tr class="answer-row" data-index="4">
-                    <td>5</td>
-                    <td>原地右转 → 前进一格 → 原地左转 → 前进一格 → 原地右转 → 前进一格 → 原地左转 → 前进一格</td>
-                </tr>
-                <tr class="answer-row" data-index="5">
-                    <td>6</td>
-                    <td>原地右转 → 前进一格 → 前进一格 → 原地左转 → 前进一格 → 前进一格</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
     <script>
-        // 瓢虫核心状态（新增路径记录）
+        // 瓢虫核心状态
         const ladybug = {
             element: document.getElementById('ladybug'),
             row: 1,
             col: 1,
             direction: 0, // 0:右 1:下 2:左 3:上
             isMoving: false,
-            // 记录走过的路径（去重）
             path: []
         };
 
@@ -467,7 +495,7 @@
             { rotate: 270, row: -1, col: 0 } // 上
         ];
 
-        // 6种正确的指令序列（逻辑不变，仅前端显示文字修改）
+        // 6种正确的指令序列
         const correctAnswers = [
             ['forward', 'forward', 'right', 'forward', 'forward'],       
             ['forward', 'right', 'forward', 'left', 'forward', 'right', 'forward'], 
@@ -477,28 +505,74 @@
             ['right', 'forward', 'forward', 'left', 'forward', 'forward']  
         ];
 
-        // 更新路径样式，实现渐变透明度的绿色背景
+        // 根据指令序列计算瓢虫移动的位置路径
+        function getPositionPath(cmdSeq) {
+            let row = 1;
+            let col = 1;
+            let direction = 0;
+            const path = [{ row, col }];
+            for (const cmd of cmdSeq) {
+                switch(cmd) {
+                    case 'forward':
+                        const dir = directionMap[direction];
+                        row += dir.row;
+                        col += dir.col;
+                        path.push({ row, col });
+                        break;
+                    case 'left':
+                        direction = (direction - 1 + 4) % 4;
+                        break;
+                    case 'right':
+                        direction = (direction + 1) % 4;
+                        break;
+                }
+            }
+            return path;
+        }
+
+        // 渲染路径SVG（起点/终点均为红点）
+        function renderPathSvg(positionPath) {
+            const cellSize = 40;
+            const svgSize = cellSize * 3;
+            const points = positionPath.map(pos => {
+                const x = (pos.col - 1) * cellSize + cellSize/2;
+                const y = (pos.row - 1) * cellSize + cellSize/2;
+                return `${x},${y}`;
+            }).join(' ');
+
+            return `
+                <svg width="${svgSize}" height="${svgSize}" viewBox="0 0 ${svgSize} ${svgSize}" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="${svgSize}" height="${svgSize}" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+                    <line x1="${cellSize}" y1="0" x2="${cellSize}" y2="${svgSize}" stroke="#ddd" stroke-width="1"/>
+                    <line x1="${cellSize*2}" y1="0" x2="${cellSize*2}" y2="${svgSize}" stroke="#ddd" stroke-width="1"/>
+                    <line x1="0" y1="${cellSize}" x2="${svgSize}" y2="${cellSize}" stroke="#ddd" stroke-width="1"/>
+                    <line x1="0" y1="${cellSize*2}" x2="${svgSize}" y2="${cellSize*2}" stroke="#ddd" stroke-width="1"/>
+                    <polyline points="${points}" fill="none" stroke="#3498db" stroke-width="2" stroke-linecap="round"/>
+                    <!-- 起点红点 -->
+                    <circle cx="${points.split(' ')[0].split(',')[0]}" cy="${points.split(' ')[0].split(',')[1]}" r="5" fill="#e74c3c"/>
+                    <!-- 终点红点 -->
+                    <circle cx="${points.split(' ').pop().split(',')[0]}" cy="${points.split(' ').pop().split(',')[1]}" r="5" fill="#e74c3c"/>
+                </svg>
+            `.trim();
+        }
+
+        // 更新路径样式
         function updatePathStyles() {
             const pathLength = ladybug.path.length;
-            // 透明度范围：最新走的格子1（最绿），最早走的格子0.2（最淡）
             const minOpacity = 0.2;
             const maxOpacity = 1;
 
-            // 先清空所有路径格子的背景（避免样式残留）
             document.querySelectorAll('.grid-cell.path').forEach(cell => {
                 cell.style.backgroundColor = '';
             });
 
-            // 遍历路径，为每个格子设置渐变绿色
             ladybug.path.forEach((pos, index) => {
                 const cell = document.querySelector(`.grid-cell[data-row="${pos.row}"][data-col="${pos.col}"]`);
                 if (cell) {
                     cell.classList.add('path');
-                    // 计算透明度：索引越大（越新），透明度越高
                     const opacity = pathLength === 1 
                         ? maxOpacity 
                         : minOpacity + (maxOpacity - minOpacity) * (index / (pathLength - 1));
-                    // 柔和的淡绿色
                     cell.style.backgroundColor = `rgba(144, 238, 144, ${opacity})`;
                 }
             });
@@ -509,9 +583,7 @@
             ladybug.row = 1;
             ladybug.col = 1;
             ladybug.direction = 0;
-            // 重置路径记录
             ladybug.path = [];
-            // 清空所有格子的路径样式
             document.querySelectorAll('.grid-cell').forEach(cell => {
                 cell.style.backgroundColor = '';
                 cell.classList.remove('path');
@@ -519,75 +591,59 @@
             updateLadybug();
         }
 
-        // 生成洛谷AC特效的彩带
+        // 生成彩带
         function createConfetti() {
-            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff']; // 彩虹色
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
             const acModal = document.getElementById('ac-modal');
             
-            // 生成100个彩带
             for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
-                
-                // 随机样式
                 confetti.style.left = `${Math.random() * 100}vw`;
                 confetti.style.top = `${Math.random() * -50}px`;
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.width = `${Math.random() * 10 + 5}px`;
                 confetti.style.height = `${Math.random() * 10 + 5}px`;
-                confetti.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2-4秒
-                confetti.style.animationDelay = `${Math.random() * 2}s`; // 0-2秒延迟
+                confetti.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
                 
                 acModal.appendChild(confetti);
-                
-                // 动画结束后移除彩带
-                setTimeout(() => {
-                    confetti.remove();
-                }, 4000);
+                setTimeout(() => confetti.remove(), 4000);
             }
         }
 
-        // 显示洛谷AC特效
+        // 显示AC特效
         function showACEffect() {
             const acModal = document.getElementById('ac-modal');
             acModal.style.display = 'flex';
-            // 生成彩带
             createConfetti();
-            // 每隔500ms生成一次彩带，持续3秒
-            let confettiTimer = setInterval(() => {
-                createConfetti();
-            }, 500);
-            setTimeout(() => {
-                clearInterval(confettiTimer);
-            }, 3000);
+            let confettiTimer = setInterval(createConfetti, 500);
+            setTimeout(() => clearInterval(confettiTimer), 3000);
         }
 
-        // 检测是否所有答案都已完成（6行都激活）
+        // 检测是否所有答案都完成
         function checkAllAnswersCompleted() {
             const allAnswerRows = document.querySelectorAll('.answer-row');
-            // 检查每一行是否都有active类
             return Array.from(allAnswerRows).every(row => row.classList.contains('active'));
         }
 
-        // 更新瓢虫的位置、朝向和路径显示
+        // 更新瓢虫位置和样式
         function updateLadybug() {
             const targetCell = document.querySelector(`.grid-cell[data-row="${ladybug.row}"][data-col="${ladybug.col}"]`);
             if (!targetCell) return;
             targetCell.appendChild(ladybug.element);
             ladybug.element.style.transform = `rotate(${directionMap[ladybug.direction].rotate}deg)`;
 
-            // 记录当前位置到路径（去重）
             const currentPos = { row: ladybug.row, col: ladybug.col };
             const isDuplicate = ladybug.path.some(pos => pos.row === currentPos.row && pos.col === currentPos.col);
             if (!isDuplicate) {
                 ladybug.path.push({ ...currentPos });
             }
 
-            // 更新路径样式
             updatePathStyles();
         }
 
-        // 执行单个指令
+        // 执行单个指令（修复left指令变量名错误）
         function runCommand(cmd) {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -601,6 +657,7 @@
                             }
                             break;
                         case 'left':
+                            // 修复核心bug：添加ladybug.前缀
                             ladybug.direction = (ladybug.direction - 1 + 4) % 4;
                             break;
                         case 'right':
@@ -613,44 +670,43 @@
             });
         }
 
-        // 对比用户序列和正确答案，匹配则高亮
+        // 强制匹配并高亮正确答案行
         function checkAnswer(userCommands) {
-            for (let i = 0; i < correctAnswers.length; i++) {
-                const correctSeq = correctAnswers[i];
-                if (userCommands.length !== correctSeq.length) continue;
-                const isMatch = userCommands.every((cmd, idx) => cmd === correctSeq[idx]);
-                if (isMatch) {
-                    document.querySelector(`.answer-row[data-index="${i}"]`).classList.add('active');
+            // 遍历所有6种正确答案
+            correctAnswers.forEach((correctSeq, index) => {
+                // 只有指令序列完全一致时才高亮
+                if (userCommands.length === correctSeq.length && 
+                    userCommands.every((cmd, idx) => cmd === correctSeq[idx])) {
+                    // 强制添加active类（确保一定会高亮）
+                    const answerRow = document.querySelector(`.answer-row[data-index="${index}"]`);
+                    answerRow.classList.add('active');
+                    console.log(`匹配成功：第${index+1}种答案已高亮`);
                 }
-            }
+            });
         }
 
-        // 批量执行指令
+        // 批量执行指令（移除终点break逻辑，确保指令完整执行）
         async function runAllCommands() {
             if (ladybug.isMoving) return;
             ladybug.isMoving = true;
 
             initLadybug();
-            // 隐藏AC特效
             document.getElementById('ac-modal').style.display = 'none';
-            // 清空现有彩带
             document.querySelectorAll('.confetti').forEach(c => c.remove());
             
             const cmdElements = document.querySelectorAll('#command-bar .command-item');
             const userCommands = Array.from(cmdElements).map(el => el.dataset.command);
 
+            // 移除break逻辑：确保所有指令都执行完毕，保证序列完整性
             for (const cmd of userCommands) {
                 await runCommand(cmd);
-                if (ladybug.row === 3 && ladybug.col === 3) break;
             }
 
-            // 只有瓢虫到达终点才检查答案并判断是否显示AC
+            // 只要瓢虫到达终点，就执行答案匹配（强制高亮）
             if (ladybug.row === 3 && ladybug.col === 3) {
-                // 高亮匹配的答案行
                 checkAnswer(userCommands);
-                // 检查是否所有6种方式都完成了
+                // 检查是否全部完成，显示AC特效
                 if (checkAllAnswersCompleted()) {
-                    // 所有答案都完成，显示AC特效
                     showACEffect();
                 }
             }
@@ -658,18 +714,16 @@
             ladybug.isMoving = false;
         }
 
-        // 重置游戏（保留已点亮答案）
+        // 重置游戏
         function resetGame() {
             document.getElementById('command-bar').innerHTML = '';
-            // 隐藏AC特效
             document.getElementById('ac-modal').style.display = 'none';
-            // 清空现有彩带
             document.querySelectorAll('.confetti').forEach(c => c.remove());
             initLadybug();
             ladybug.isMoving = false;
         }
 
-        // 初始化拖拽功能 - 修改3：拖拽生成的指令项文字替换
+        // 初始化拖拽功能
         function initDrag() {
             const btns = document.querySelectorAll('.command-btn');
             const bar = document.getElementById('command-bar');
@@ -687,7 +741,6 @@
                 if (ladybug.isMoving) return;
                 
                 const cmd = e.dataTransfer.getData('cmd');
-                // 文字修改2：指令项显示文字替换
                 const cmdNames = { forward: '前进一格', left: '原地左转', right: '原地右转' };
                 
                 const item = document.createElement('div');
@@ -714,6 +767,14 @@
             initLadybug();
             initDrag();
             bindEvents();
+
+            // 生成所有答案的路径示意图
+            correctAnswers.forEach((cmdSeq, index) => {
+                const positionPath = getPositionPath(cmdSeq);
+                const svg = renderPathSvg(positionPath);
+                const row = document.querySelector(`.answer-row[data-index="${index}"]`);
+                row.querySelector('.path-svg').innerHTML = svg;
+            });
         };
     </script>
 </body>

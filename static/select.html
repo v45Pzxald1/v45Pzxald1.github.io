@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瓢虫移动大冒险（平级分支）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: hidden; /* 防止彩带动画溢出横向滚动 */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .task-desc {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .map-container {
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            grid-template-rows: repeat(3, 120px);
+            gap: 8px;
+            background-color: #ddd;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .grid-cell {
+            background-color: #fff;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .grid-cell.path {
+            background-color: rgba(144, 238, 144, 0.7);
+        }
+
+        .shop-text {
+            z-index: 5;
+        }
+
+        .ladybug {
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='50' rx='40' ry='35' fill='%23e74c3c'/%3E%3Ccircle cx='75' cy='50' r='15' fill='%23000'/%3E%3Cpath d='M85 50 L95 40 L100 35' stroke='%23000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M85 50 L95 60 L100 65' stroke='%23000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='70' cy='45' r='4' fill='%23fff'/%3E%3Ccircle cx='70' cy='55' r='4' fill='%23fff'/%3E%3Ccircle cx='30' cy='35' r='8' fill='%23000'/%3E%3Ccircle cx='30' cy='65' r='8' fill='%23000'/%3E%3Ccircle cx='50' cy='30' r='8' fill='%23000'/%3E%3Ccircle cx='50' cy='70' r='8' fill='%23000'/%3E%3C/svg%3E");
+            background-size: cover;
+            position: absolute;
+            transition: all 0.5s ease;
+            transform: rotate(0deg);
+            z-index: 10;
+        }
+
+        /* 指令区样式 - 精准缩进 */
+        .commands {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .command-pool {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .command-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: move;
+            font-size: 14px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            white-space: nowrap;
+        }
+
+        /* 指令颜色区分 */
+        .cmd-if { background-color: #e67e22; }    /* 如果（顶格） */
+        .cmd-flag { background-color: #9b59b6; } /* 标识（缩进） */
+        .cmd-action { background-color: #3498db;}/* 动作（缩进） */
+        .cmd-stop { background-color: #e74c3c; } /* 终止（缩进） */
+
+        /* 指令栏 */
+        .command-bar {
+            padding: 20px;
+            background-color: #eee;
+            border-radius: 8px;
+            min-height: 80px;
+            width: 100%;
+        }
+
+        /* 指令行 - 核心缩进规则 */
+        .command-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        /* 如果行：顶格 */
+        .line-if { 
+            padding-left: 0; 
+            cursor: pointer; /* 提示可点击切换 */
+        }
+        /* 内容行：缩进半个格子（60px） */
+        .line-content { padding-left: 60px; }
+
+        /* 激活的如果行高亮 */
+        .line-if.active {
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 4px;
+        }
+
+        .command-item {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .command-item.item-if { background-color: #e67e22; }
+        .command-item.item-flag { background-color: #9b59b6; }
+        .command-item.item-action { background-color: #3498db; }
+        .command-item.item-stop { background-color: #e74c3c; }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #start-btn { background-color: #2ecc71; color: white; }
+        #reset-btn { background-color: #e74c3c; color: white; }
+
+        /* ========== 洛谷AC特效样式 ========== */
+        /* 全屏遮罩 */
+        .ac-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        /* AC文字容器 */
+        .ac-content {
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* AC大文字 */
+        .ac-text {
+            font-size: 120px;
+            font-weight: bold;
+            color: #4CAF50;
+            text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF50;
+            animation: acPulse 2s ease-in-out infinite, acScale 1s ease-out;
+        }
+
+        /* 副标题 */
+        .ac-subtext {
+            font-size: 30px;
+            color: #fff;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #fff;
+            animation: acFadeIn 1.5s ease-out;
+        }
+
+        /* 重置按钮 */
+        .ac-reset-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #4CAF50;
+            transition: all 0.3s ease;
+            animation: acFadeIn 2s ease-out;
+        }
+
+        .ac-reset-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #4CAF50;
+        }
+
+        /* 彩带元素 */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.8;
+            animation: confettiFall 3s ease-in-out forwards;
+        }
+
+        /* ========== 动画关键帧 ========== */
+        /* AC文字脉冲 */
+        @keyframes acPulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px #4CAF50, 0 0 40px #4CAF50;
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 30px #4CAF50, 0 0 60px #4CAF50, 0 0 80px #4CAF50;
+            }
+        }
+
+        /* AC文字缩放入场 */
+        @keyframes acScale {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 渐入动画 */
+        @keyframes acFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 彩带飘落动画 */
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            /* 响应式AC文字 */
+            .ac-text {
+                font-size: 80px;
+            }
+            .ac-subtext {
+                font-size: 24px;
+            }
+            .ac-reset-btn {
+                padding: 12px 30px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>瓢虫移动大冒险</h1>
+
+    <div class="task-desc">
+        🎯 规则：在这个游戏里，我们不用每一个都给机器人下指令，而是让机器人根据路标指示牌行进。
+    </div>
+
+    <!-- 地图 -->
+    <div class="map-container">
+        <div class="grid">
+            <div class="grid-cell" data-row="1" data-col="1">
+                <div class="shop-text">起点</div>
+                <div class="ladybug" id="ladybug"></div>
+            </div>
+            <div class="grid-cell" data-row="1" data-col="2"></div>
+            <div class="grid-cell" data-row="1" data-col="3">
+                <div class="shop-text">面包店</div>
+            </div>
+            <div class="grid-cell" data-row="2" data-col="1"></div>
+            <div class="grid-cell" data-row="2" data-col="2"></div>
+            <div class="grid-cell" data-row="2" data-col="3"></div>
+            <div class="grid-cell" data-row="3" data-col="1">
+                <div class="shop-text">海鲜店</div>
+            </div>
+            <div class="grid-cell" data-row="3" data-col="2"></div>
+            <div class="grid-cell" data-row="3" data-col="3">
+                <div class="shop-text">水果店</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 指令区（精准缩进） -->
+    <div class="commands">
+        <div class="command-pool">
+            <div class="command-btn cmd-if" draggable="true" data-command="if">如果</div>
+            <div class="command-btn cmd-flag" draggable="true" data-command="flag-bakery">面包店</div>
+            <div class="command-btn cmd-flag" draggable="true" data-command="flag-fruit">水果店</div>
+            <div class="command-btn cmd-flag" draggable="true" data-command="flag-seafood">海鲜店</div>
+            <div class="command-btn cmd-action" draggable="true" data-command="left">左转</div>
+            <div class="command-btn cmd-action" draggable="true" data-command="right">右转</div>
+            <div class="command-btn cmd-stop" draggable="true" data-command="stop">终止移动</div>
+        </div>
+        <div class="command-bar" id="command-bar"></div>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls">
+        <button class="control-btn" id="start-btn">开始移动</button>
+        <button class="control-btn" id="reset-btn">重置游戏</button>
+    </div>
+
+    <!-- 洛谷AC风格特效容器（替换原来的胜利弹窗） -->
+    <div class="ac-modal" id="ac-modal">
+        <div class="ac-content">
+            <div class="ac-text">恭喜！！！</div>
+            <div class="ac-subtext">恭喜完成所有任务 🎉</div>
+            <button class="ac-reset-btn" id="ac-reset-btn">再来一次</button>
+        </div>
+    </div>
+
+    <script>
+        // 瓢虫核心状态
+        const ladybug = {
+            element: document.getElementById('ladybug'),
+            row: 1,
+            col: 1,
+            direction: 0, // 0:右 1:下 2:左 3:上
+            isMoving: false,
+            moveTimer: null,
+            path: []
+        };
+
+        // 方向配置
+        const directionMap = [
+            { rotate: 0, row: 0, col: 1 },   // 右
+            { rotate: 90, row: 1, col: 0 },  // 下
+            { rotate: 180, row: 0, col: -1 },// 左
+            { rotate: 270, row: -1, col: 0 } // 上
+        ];
+
+        // 分支状态：记录当前激活的如果分支
+        let activeIfLine = null;
+
+        // 初始化瓢虫
+        function initLadybug() {
+            ladybug.row = 1;
+            ladybug.col = 1;
+            ladybug.direction = 0;
+            ladybug.isMoving = false;
+            
+            if (ladybug.moveTimer) {
+                clearInterval(ladybug.moveTimer);
+                ladybug.moveTimer = null;
+            }
+
+            // 清空路径
+            document.querySelectorAll('.grid-cell').forEach(cell => {
+                cell.classList.remove('path');
+            });
+            ladybug.path = [];
+
+            // 重置指令栏和分支状态
+            activeIfLine = null;
+            document.getElementById('command-bar').innerHTML = '';
+
+            // 隐藏AC特效
+            document.getElementById('ac-modal').style.display = 'none';
+            // 清空现有彩带
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+
+            updateLadybug();
+        }
+
+        // 生成洛谷AC特效的彩带
+        function createConfetti() {
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff']; // 彩虹色
+            const acModal = document.getElementById('ac-modal');
+            
+            // 生成100个彩带
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // 随机样式
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * -50}px`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = `${Math.random() * 10 + 5}px`;
+                confetti.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2-4秒
+                confetti.style.animationDelay = `${Math.random() * 2}s`; // 0-2秒延迟
+                
+                acModal.appendChild(confetti);
+                
+                // 动画结束后移除彩带
+                setTimeout(() => {
+                    confetti.remove();
+                }, 4000);
+            }
+        }
+
+        // 显示洛谷AC特效
+        function showACEffect() {
+            const acModal = document.getElementById('ac-modal');
+            acModal.style.display = 'flex';
+            // 生成彩带
+            createConfetti();
+            // 每隔500ms生成一次彩带，持续3秒
+            let confettiTimer = setInterval(() => {
+                createConfetti();
+            }, 500);
+            setTimeout(() => {
+                clearInterval(confettiTimer);
+            }, 3000);
+        }
+
+        // 更新瓢虫位置和朝向
+        function updateLadybug() {
+            // 移动瓢虫到目标格子
+            const targetCell = document.querySelector(`.grid-cell[data-row="${ladybug.row}"][data-col="${ladybug.col}"]`);
+            if (targetCell) {
+                targetCell.appendChild(ladybug.element);
+                targetCell.classList.add('path');
+            }
+            
+            // 设置朝向
+            ladybug.element.style.transform = `rotate(${directionMap[ladybug.direction].rotate}deg)`;
+
+            // 胜利条件：回到起点且走过至少3步
+            if (ladybug.row === 1 && ladybug.col === 1 && ladybug.path.length > 3) {
+                stopMoving();
+                // 替换为洛谷AC特效
+                showACEffect();
+            }
+        }
+
+        // 自动前进一格
+        function moveForward() {
+            const newRow = ladybug.row + directionMap[ladybug.direction].row;
+            const newCol = ladybug.col + directionMap[ladybug.direction].col;
+
+            // 边界检查
+            if (newRow >= 1 && newRow <= 3 && newCol >= 1 && newCol <= 3) {
+                ladybug.row = newRow;
+                ladybug.col = newCol;
+                ladybug.path.push({ row: newRow, col: newCol });
+            }
+
+            updateLadybug();
+            // 执行平级分支逻辑
+            executeBranchCommands();
+        }
+
+        // 执行平级分支指令逻辑
+        function executeBranchCommands() {
+            const commandBar = document.getElementById('command-bar');
+            const ifLines = commandBar.querySelectorAll('.line-if');
+            const branches = [];
+
+            // 遍历所有如果分支，解析 标识+动作
+            ifLines.forEach(ifLine => {
+                let flag = '';
+                let action = '';
+                
+                // 找当前如果对应的内容行（下一行）
+                const contentLine = ifLine.nextElementSibling;
+                if (contentLine && contentLine.classList.contains('line-content')) {
+                    // 解析标识和动作
+                    contentLine.querySelectorAll('.command-item').forEach(item => {
+                        const cmd = item.dataset.command;
+                        if (cmd.startsWith('flag-')) {
+                            flag = cmd.replace('flag-', '');
+                        } else if (cmd === 'left' || cmd === 'right' || cmd === 'stop') {
+                            action = cmd;
+                        }
+                    });
+                }
+
+                if (flag && action) {
+                    branches.push({ flag, action });
+                }
+            });
+
+            // 当前位置标识
+            let currentFlag = '';
+            if (ladybug.row === 1 && ladybug.col === 3) currentFlag = 'bakery';
+            if (ladybug.row === 3 && ladybug.col === 3) currentFlag = 'fruit';
+            if (ladybug.row === 3 && ladybug.col === 1) currentFlag = 'seafood';
+
+            // 匹配执行平级分支
+            branches.forEach(branch => {
+                if (branch.flag === currentFlag) {
+                    switch(branch.action) {
+                        case 'left':
+                            ladybug.direction = (ladybug.direction - 1 + 4) % 4;
+                            updateLadybug();
+                            break;
+                        case 'right':
+                            ladybug.direction = (ladybug.direction + 1) % 4;
+                            updateLadybug();
+                            break;
+                        case 'stop':
+                            stopMoving();
+                            break;
+                    }
+                }
+            });
+        }
+
+        // 开始移动
+        function startMoving() {
+            if (ladybug.isMoving) return;
+            
+            ladybug.isMoving = true;
+            ladybug.moveTimer = setInterval(moveForward, 800);
+            moveForward();
+        }
+
+        // 停止移动
+        function stopMoving() {
+            ladybug.isMoving = false;
+            if (ladybug.moveTimer) {
+                clearInterval(ladybug.moveTimer);
+                ladybug.moveTimer = null;
+            }
+        }
+
+        // 切换激活的如果分支
+        function switchActiveIfLine(ifLine) {
+            // 移除所有高亮
+            document.querySelectorAll('.line-if').forEach(line => {
+                line.classList.remove('active');
+            });
+            // 设置新激活分支
+            activeIfLine = ifLine;
+            ifLine.classList.add('active');
+        }
+
+        // 获取当前激活的如果分支（如果没有则取第一个）
+        function getActiveIfLine() {
+            if (activeIfLine && document.body.contains(activeIfLine)) {
+                return activeIfLine;
+            }
+            // 如果没有激活的，取第一个存在的如果行
+            const firstIfLine = document.querySelector('.line-if');
+            if (firstIfLine) {
+                switchActiveIfLine(firstIfLine);
+                return firstIfLine;
+            }
+            return null;
+        }
+
+        // 初始化精准缩进拖拽功能
+        function initDrag() {
+            const bar = document.getElementById('command-bar');
+            const cmdNames = {
+                'if': '如果',
+                'flag-bakery': '面包店',
+                'flag-fruit': '水果店',
+                'flag-seafood': '海鲜店',
+                'left': '左转',
+                'right': '右转',
+                'stop': '终止移动'
+            };
+
+            // 创建指令行
+            function createLine(type) {
+                const line = document.createElement('div');
+                line.className = `command-line ${type === 'if' ? 'line-if' : 'line-content'}`;
+                bar.appendChild(line);
+                return line;
+            }
+
+            // 拖拽开始
+            document.querySelectorAll('[draggable="true"]').forEach(btn => {
+                btn.ondragstart = (e) => {
+                    e.dataTransfer.setData('text/plain', btn.dataset.command);
+                };
+            });
+
+            // 允许放置
+            bar.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+
+            // 放置指令（核心修复：删除后仍可添加）
+            bar.ondrop = (e) => {
+                e.preventDefault();
+                if (ladybug.isMoving) return;
+                
+                const cmd = e.dataTransfer.getData('text/plain');
+                if (!cmd) return;
+
+                const item = document.createElement('div');
+                item.dataset.command = cmd;
+                item.textContent = cmdNames[cmd];
+
+                // 1. 如果指令：顶格创建新行，设为当前激活分支
+                if (cmd === 'if') {
+                    item.className = 'command-item item-if';
+                    const ifLine = createLine('if');
+                    ifLine.appendChild(item);
+                    
+                    // 绑定点击切换事件
+                    ifLine.onclick = () => {
+                        switchActiveIfLine(ifLine);
+                    };
+                    
+                    // 设置为激活分支
+                    switchActiveIfLine(ifLine);
+                } 
+                // 2. 标识/动作/终止：缩进，添加到当前激活的如果行的内容行
+                else {
+                    // 修复核心：如果没有激活分支，尝试获取第一个
+                    const currentIfLine = getActiveIfLine();
+                    if (!currentIfLine) return; // 必须先有如果行
+
+                    // 设置样式
+                    if (cmd.startsWith('flag-')) {
+                        item.className = 'command-item item-flag';
+                    } else if (cmd === 'left' || cmd === 'right') {
+                        item.className = 'command-item item-action';
+                    } else if (cmd === 'stop') {
+                        item.className = 'command-item item-stop';
+                    }
+
+                    // 找当前如果行的内容行（没有则创建）
+                    let contentLine = currentIfLine.nextElementSibling;
+                    if (!contentLine || !contentLine.classList.contains('line-content')) {
+                        contentLine = createLine('content');
+                        // 插入到如果行后面
+                        currentIfLine.after(contentLine);
+                    }
+
+                    // 添加指令项
+                    contentLine.appendChild(item);
+                }
+
+                // 点击删除指令（修复：删除后不丢失激活状态）
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    if (!ladybug.isMoving) {
+                        const parentLine = item.parentElement;
+                        const isIfLine = parentLine.classList.contains('line-if');
+                        
+                        // 删除当前指令
+                        item.remove();
+                        
+                        // 内容行空则删除
+                        if (parentLine.classList.contains('line-content') && parentLine.children.length === 0) {
+                            parentLine.remove();
+                        }
+                        
+                        // 如果行空则删除，同时切换激活分支
+                        if (isIfLine && parentLine.children.length === 0) {
+                            const wasActive = parentLine === activeIfLine;
+                            parentLine.remove();
+                            
+                            // 如果删除的是激活分支，切换到第一个存在的
+                            if (wasActive) {
+                                const firstIfLine = document.querySelector('.line-if');
+                                if (firstIfLine) {
+                                    switchActiveIfLine(firstIfLine);
+                                } else {
+                                    activeIfLine = null;
+                                }
+                            }
+                        }
+                    }
+                };
+            };
+        }
+
+        // 绑定事件
+        function bindEvents() {
+            document.getElementById('start-btn').addEventListener('click', startMoving);
+            document.getElementById('reset-btn').addEventListener('click', initLadybug);
+            document.getElementById('ac-reset-btn').addEventListener('click', initLadybug);
+        }
+
+        // 初始化
+        window.onload = () => {
+            initLadybug();
+            initDrag();
+            bindEvents();
+        };
+    </script>
+</body>
+</html>

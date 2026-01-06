@@ -377,7 +377,7 @@
 
     <!-- 任务说明 -->
     <div class="task-desc">
-        🎯 任务目标：瓢虫从原地(1,1)出发，依次到达【面包店(1,3)】→【水果店(3,3)】→【海鲜店(3,1)】，最后回到原地(1,1)即为成功！
+        🎯 任务目标：瓢虫机器人要依次去面包店、水果店和海鲜店，然后再回到起点，并按照同样的路线出行2次。
     </div>
 
     <!-- 地图容器 -->
@@ -449,12 +449,13 @@
             isMoving: false,
             // 记录走过的路径（去重）
             path: [],
-            // 任务进度：记录是否依次到达目标地点
+            // 任务进度：记录是否依次到达目标地点 + 完成的轮次
             taskProgress: {
                 bakery: false,    // 面包店(1,3)
                 fruitShop: false, // 水果店(3,3)
                 seafoodShop: false,// 海鲜店(3,1)
-                backHome: false   // 回到原地(1,1)
+                backHome: false,   // 回到原地(1,1)
+                rounds: 0         // 完成的完整路线次数（新增）
             }
         };
 
@@ -471,12 +472,13 @@
             ladybug.row = 1;
             ladybug.col = 1;
             ladybug.direction = 0;
-            // 重置任务进度
+            // 重置任务进度（包含轮次）
             ladybug.taskProgress = {
                 bakery: false,
                 fruitShop: false,
                 seafoodShop: false,
-                backHome: false
+                backHome: false,
+                rounds: 0 // 重置完成的轮次
             };
             // 重置路径记录
             ladybug.path = [];
@@ -486,6 +488,7 @@
                 cell.classList.remove('path');
             });
             updateLadybug();
+            console.log('瓢虫初始化完成');
         }
 
         // 更新路径样式，实现渐变透明度的绿色背景
@@ -531,12 +534,13 @@
             const isDuplicate = ladybug.path.some(pos => pos.row === currentPos.row && pos.col === currentPos.col);
             if (!isDuplicate) {
                 ladybug.path.push({ ...currentPos });
+                console.log('瓢虫移动到:', currentPos);
             }
 
             // 更新路径样式
             updatePathStyles();
 
-            // 3. 检查任务进度（必须按顺序）
+            // 3. 检查任务进度
             checkTaskProgress();
         }
 
@@ -581,77 +585,112 @@
             setTimeout(() => {
                 clearInterval(confettiTimer);
             }, 3000);
+            console.log('任务完成，显示AC特效');
         }
 
-        // 检查任务进度（严格按顺序：面包店→水果店→海鲜店→原地）
+        // 修复：简化任务进度判断逻辑，增加容错性
         function checkTaskProgress() {
             const { row, col } = ladybug;
             const { taskProgress } = ladybug;
 
             // 第一步：到达面包店(1,3)
-            if (!taskProgress.bakery && row === 1 && col === 3) {
+            if (row === 1 && col === 3) {
                 taskProgress.bakery = true;
             }
-            // 第二步：到达水果店(3,3)（需先完成第一步）
-            else if (taskProgress.bakery && !taskProgress.fruitShop && row === 3 && col === 3) {
+            // 第二步：到达水果店(3,3)
+            if (taskProgress.bakery && row === 3 && col === 3) {
                 taskProgress.fruitShop = true;
             }
-            // 第三步：到达海鲜店(3,1)（需先完成第二步）
-            else if (taskProgress.fruitShop && !taskProgress.seafoodShop && row === 3 && col === 1) {
+            // 第三步：到达海鲜店(3,1)
+            if (taskProgress.fruitShop && row === 3 && col === 1) {
                 taskProgress.seafoodShop = true;
             }
-            // 第四步：回到原地(1,1)（需先完成第三步）
-            else if (taskProgress.seafoodShop && !taskProgress.backHome && row === 1 && col === 1) {
+            // 第四步：回到原地(1,1)
+            if (taskProgress.seafoodShop && row === 1 && col === 1) {
                 taskProgress.backHome = true;
-                // 显示洛谷AC特效（替换原来的弹窗）
-                showACEffect();
+                // 完成一轮，轮次加1
+                taskProgress.rounds += 1;
+                console.log(`完成第${taskProgress.rounds}轮`);
+                
+                // 判断是否完成2轮
+                if (taskProgress.rounds === 2) {
+                    // 完成2轮，显示AC特效
+                    showACEffect();
+                } else {
+                    // 未完成2轮，重置单次任务进度，继续下一轮
+                    taskProgress.bakery = false;
+                    taskProgress.fruitShop = false;
+                    taskProgress.seafoodShop = false;
+                    taskProgress.backHome = false;
+                }
             }
         }
 
-        // 解析指令序列（处理循环逻辑）
+        // 【核心修复】支持嵌套循环的指令解析函数
         function parseCommandSequence(commands) {
-            const parsedCommands = [];
-            let i = 0;
+            const result = [];          // 最终执行的指令序列
+            const loopStack = [];       // 循环栈：存储每层循环的{times: 次数, buffer: 指令缓冲区}
+            let currentLoopTimes = 2;   // 默认循环次数
 
-            while (i < commands.length) {
-                // 检测循环指令（循环次数 + 循环开始 必须相邻）
-                if (commands[i].type === 'loop-count' && 
-                    i+1 < commands.length && 
-                    commands[i+1].type === 'loop-start') {
-                    
-                    // 获取循环次数
-                    const loopTimes = parseInt(commands[i].value) || 2;
-                    i += 2; // 跳过loop-count和loop-start
-                    
-                    // 找到对应的loop-end
-                    const loopEndIndex = commands.findIndex((cmd, idx) => 
-                        idx >= i && cmd.type === 'loop-end'
-                    );
-                    
-                    if (loopEndIndex === -1) {
-                        // 无匹配的loop-end，跳过
-                        i = commands.length;
+            console.log('原始指令:', commands);
+
+            for (const cmd of commands) {
+                switch(cmd.type) {
+                    case 'loop-count':
+                        // 更新当前层级的循环次数（栈顶优先，无栈则更新全局默认）
+                        currentLoopTimes = parseInt(cmd.value) || 2;
                         break;
-                    }
-                    
-                    // 提取循环体指令
-                    const loopBody = commands.slice(i, loopEndIndex);
-                    // 循环添加指令
-                    for (let j = 0; j < loopTimes; j++) {
-                        parsedCommands.push(...loopBody);
-                    }
-                    
-                    i = loopEndIndex + 1; // 跳过loop-end
-                } else {
-                    // 普通指令直接添加
-                    if (commands[i].type !== 'loop-end') { // 跳过孤立的loop-end
-                        parsedCommands.push(commands[i]);
-                    }
-                    i++;
+
+                    case 'loop-start':
+                        // 压入新的循环层级到栈中
+                        loopStack.push({
+                            times: currentLoopTimes,  // 记录当前层级的循环次数
+                            buffer: []                // 该层级的指令缓冲区
+                        });
+                        // 重置当前循环次数为默认值，避免影响后续层级
+                        currentLoopTimes = 2;
+                        break;
+
+                    case 'loop-end':
+                        if (loopStack.length === 0) {
+                            // 无匹配的循环开始，忽略该结束指令
+                            console.warn('发现未匹配的循环结束指令');
+                            break;
+                        }
+                        // 弹出栈顶的循环层级
+                        const currentLoop = loopStack.pop();
+                        const loopResult = [];
+                        // 按次数重复当前层级的指令
+                        for (let i = 0; i < currentLoop.times; i++) {
+                            loopResult.push(...currentLoop.buffer);
+                        }
+                        // 判断：如果还有外层循环，将结果加入外层缓冲区；否则加入最终结果
+                        if (loopStack.length > 0) {
+                            loopStack[loopStack.length - 1].buffer.push(...loopResult);
+                        } else {
+                            result.push(...loopResult);
+                        }
+                        break;
+
+                    default:
+                        // 普通指令（前进/左转/右转）：加入当前层级缓冲区（有循环栈则入栈顶，否则入最终结果）
+                        if (loopStack.length > 0) {
+                            loopStack[loopStack.length - 1].buffer.push(cmd);
+                        } else {
+                            result.push(cmd);
+                        }
+                        break;
                 }
             }
 
-            return parsedCommands;
+            // 处理未闭合的循环（将所有未结束的循环缓冲区直接加入结果）
+            loopStack.forEach(unclosedLoop => {
+                result.push(...unclosedLoop.buffer);
+                console.warn('发现未闭合的循环，已将缓冲区指令加入执行序列');
+            });
+
+            console.log('解析后的指令:', result);
+            return result;
         }
 
         // 执行单个指令
@@ -688,10 +727,11 @@
             });
         }
 
-        // 批量执行指令（含循环解析）
+        // 修复：移除不合理的终止条件，确保指令能完整执行
         async function runAllCommands() {
             if (ladybug.isMoving) return;
             ladybug.isMoving = true;
+            console.log('开始执行指令');
 
             // 1. 重置瓢虫和任务进度
             initLadybug();
@@ -709,16 +749,16 @@
                 };
             });
 
-            // 3. 解析循环指令，生成最终执行序列
+            // 3. 解析嵌套循环指令，生成最终执行序列
             const parsedCommands = parseCommandSequence(rawCommands);
 
-            // 4. 逐个执行指令
+            // 4. 逐个执行指令（修复：移除提前终止逻辑）
             for (const cmd of parsedCommands) {
-                if (ladybug.taskProgress.backHome) break; // 完成任务则停止
                 await runCommand(cmd);
             }
 
             ladybug.isMoving = false;
+            console.log('指令执行完成');
         }
 
         // 重置游戏
@@ -732,6 +772,7 @@
             // 重置瓢虫
             initLadybug();
             ladybug.isMoving = false;
+            console.log('游戏已重置');
         }
 
         // 初始化拖拽功能（支持拆分后的循环指令）
@@ -773,7 +814,7 @@
             // 允许放置
             bar.ondragover = (e) => e.preventDefault();
 
-            // 放置指令处理（核心：循环开始/结束统一样式）
+            // 放置指令处理（核心：循环开始/结束统一为loop-pair-item）
             bar.ondrop = (e) => {
                 e.preventDefault();
                 if (ladybug.isMoving) return;
@@ -784,7 +825,7 @@
 
                 // 创建指令项
                 const item = document.createElement('div');
-                // 分配样式类（核心：循环开始/结束统一为loop-pair-item）
+                // 分配样式类
                 if (type === 'loop-count') {
                     item.className = 'command-item loop-count-item';
                 } else if (type === 'loop-start' || type === 'loop-end') {
@@ -844,6 +885,7 @@
             document.getElementById('start-btn').onclick = runAllCommands;
             document.getElementById('reset-btn').onclick = resetGame;
             document.getElementById('ac-reset-btn').onclick = resetGame;
+            console.log('事件绑定完成');
         }
 
         // 初始化游戏
@@ -851,6 +893,7 @@
             initLadybug();
             initDrag();
             bindEvents();
+            console.log('游戏初始化完成');
         };
     </script>
 </body>
