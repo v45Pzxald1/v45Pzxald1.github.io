@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="李保成" />
+  <title>不插电编程项目总结会议</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/reset.css">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/reveal.css">
+
+  <style type="text/css">
+    /* CSS from pandoc style.html() */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+                  </style>
+
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/dist/theme/simple.css" id="theme">
+
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="libs/reveal.js-4.2.1/plugin/customcontrols/style.css">
+
+  <style type="text/css">
+  /* some tweaks to reveal css */
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+  </style>
+
+    <link rel="stylesheet" href="css\custom.css"/>
+    <script src="libs/header-attrs-2.29/header-attrs.js"></script>
+    <link href="libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">不插电编程项目总结会议</h1>
+  <h2 class="author">李保成</h2>
+  <h3 class="date">2026年01月14日</h3>
+</section>
+
+<section>
+<section id="一进展总结" class="title-slide slide level1">
+<h1>一、进展总结</h1>
+<div class="topic-sentence with-bg">
+<p>不使用计算机的计算机科学教育活动就是不插电（unplugged）编程。</p>
+</div>
+</section>
+<section id="九年一贯制编程课程体系" class="slide level2">
+<h2>九年一贯制编程课程体系</h2>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="100%" height="auto">
+  <rect width="1200" height="300" fill="#ffffff"/>
+
+  <!-- 一、二年级 不插电编程（高度100） -->
+  <rect x="50" y="180" width="200" height="100" rx="5" fill="#ff69b4" stroke="#ff69b4" stroke-width="1"/>
+  <text x="150" y="220" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">一、二年级</text>
+  <text x="150" y="250" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">不插电编程</text>
+
+  <!-- 三、四年级 图形化编程（高度150） -->
+  <rect x="300" y="130" width="200" height="150" rx="5" fill="#ffa500" stroke="#ffa500" stroke-width="1"/>
+  <text x="400" y="190" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">三、四年级</text>
+  <text x="400" y="225" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">图形化编程</text>
+
+  <!-- 五、六年级 C++编程（高度200） -->
+  <rect x="550" y="80" width="200" height="200" rx="5" fill="#90ee90" stroke="#90ee90" stroke-width="1"/>
+  <text x="650" y="160" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">五、六年级</text>
+  <text x="650" y="200" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">C++编程</text>
+
+  <!-- 七、八年级 信息学竞赛（高度250） -->
+  <rect x="800" y="30" width="200" height="250" rx="5" fill="#4169e1" stroke="#4169e1" stroke-width="1"/>
+  <text x="900" y="130" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">七、八年级</text>
+  <text x="900" y="175" font-family="Arial, sans-serif" font-size="20" text-anchor="middle" font-weight="bold" fill="white">信息学竞赛</text>
+</svg>
+<div class="hint">
+<p>低年级以具象思维为主，适合“不插电”的动手操作；中年级形象思维成熟，可过渡到
+“图形化编程” 的可视化操作；高年级抽象思维萌芽，能理解
+“C++”的代码逻辑和语法规则。</p>
+</div>
+</section>
+<section id="项目背景" class="slide level2">
+<h2>项目背景</h2>
+<ol type="1">
+<li><p>课程体系需求：构建北校区九年一贯制编程课程体系，填补低段启蒙空白。</p></li>
+<li><p>素养落地需求：精准对接小学信息科技与小学数学核心素养，实现跨学科育人。</p></li>
+<li><p>低段教学适配：根据一、二年级学生认知特点，避免过早依赖电子设备。</p></li>
+<li><p>现有课程契合：当前小学信息科技课已普遍融入不插电学习形式。</p></li>
+</ol>
+</section>
+<section id="素养落地" class="slide level2">
+<h2>素养落地</h2>
+<div class="tbl tbl--comfort">
+<div class="tbl__caption">
+核心素养对应表
+</div>
+<div class="tbl__scroller">
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>学科</th>
+<th>核心素养</th>
+<th>不插电编程中的落地载体</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>小学数学</td>
+<td>数感、运算能力、推理意识、模型意识、几何直观、空间观念</td>
+<td>排序游戏（数感）、条件分类（推理意识）、规律递推（模型意识）、迷宫行走（空间观念）</td>
+</tr>
+<tr class="even">
+<td>小学信息科技</td>
+<td>信息意识、计算思维、数字化创新与发展、信息社会责任</td>
+<td>指令执行（计算思维）、活动设计（数字化创新）、规则遵守（信息社会责任）、问题调试（信息意识）</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="hint">
+<p>不插电编程课程内容以游戏、卡片、手工互动等实物形式，聚焦计算思维，实现信息科技与多学科素养的跨学科落地。</p>
+</div>
+</section>
+<section id="不插电编程课程内容" class="slide level2">
+<h2>不插电编程课程内容</h2>
+<iframe 
+  src="https://365.kdocs.cn/l/cnQ75cFRJgUZ" 
+  width="100%" 
+  height="700px" 
+  frameborder="0" 
+  allowfullscreen 
+  style="overflow: hidden;"  <!-- 替代 scrolling="no" -->
+></iframe>
+</section>
+<section id="不插电编程本学期总结" class="slide level2">
+<h2>不插电编程本学期总结</h2>
+<ol type="1">
+<li><p>试点任务核心达成：刘淑梅、赖秋艳、唐繁茂三位老师牵头，在二年级数学思维
+A、B 班顺利落地教学，完成顺序、循环、分支 3
+个核心主题的课程教学，学生任务完成度优异。</p></li>
+<li><p>跨学科协作深化：建立了数学与信息教师协同备课机制。</p></li>
+<li><p>教学模式创新试点：“不插电编程 + 小程序” 效果不错。</p></li>
+<li><p>体系化建设铺垫：梳理形成 3
+节可直接复用的课程，为后续教学全面铺开打好基础。</p></li>
+</ol>
+</section></section>
+<section>
+<section id="二优点分析" class="title-slide slide level1">
+<h1>二、优点分析</h1>
+
+</section>
+<section id="优点分析" class="slide level2">
+<h2>优点分析</h2>
+<ol type="1">
+<li><p>课程落地见效，学生收获显著。数学教师学情分析精准，不插电编程的游戏化动手操作，降低了编程抽象概念的理解门槛，教学效果突出。</p></li>
+<li><p>生自主打印不插电教具材料，参与兴致浓厚，课堂体验良好。</p></li>
+<li><p>“不插电 + 小程序”
+创新模式成效显著，兼顾具象体验与趣味复习，提升知识留存率。</p></li>
+<li><p>跨学科协作模式成熟，具备可复制性。</p></li>
+</ol>
+</section></section>
+<section>
+<section id="三问题梳理" class="title-slide slide level1">
+<h1>三、问题梳理</h1>
+
+</section>
+<section id="问题梳理" class="slide level2">
+<h2>问题梳理</h2>
+<ol type="1">
+<li><p>教学内容适配不足：核心知识点（如分支结构）预判不足，学生理解难度超预期。</p></li>
+<li><p>教学资源不足：小程序配套滞后，书籍、不插电器材有缺口。</p></li>
+<li><p>教师资源未充分利用：仅二年级试点，其他教师参与不进来。</p></li>
+<li><p>缺固定备课机制。</p></li>
+<li><p>课程评价不完善：缺失过程性评价。</p></li>
+<li><p>课程衔接有效性未验证（个人预判良好）。</p></li>
+<li><p>保障缺口：需专项经费（书籍、器材、小程序）。</p></li>
+</ol>
+</section></section>
+<section>
+<section id="四改进措施" class="title-slide slide level1">
+<h1>四、改进措施</h1>
+
+</section>
+<section id="改进措施" class="slide level2">
+<h2>改进措施</h2>
+<ol type="1">
+<li><p>构建教师梯队：明确分工，跨年级组建备课组，。</p></li>
+<li><p>验证课程衔接：跨学期跟踪学生，开展跨年级试点，形成衔接方案。</p></li>
+<li><p>前置资源建设：制定同步配套计划，补齐书籍、教具、小程序等缺口。</p></li>
+<li><p>申报各级课题，探索引入资源。</p></li>
+</ol>
+</section></section>
+<section>
+<section id="五下一步工作计划" class="title-slide slide level1">
+<h1>五、下一步工作计划</h1>
+
+</section>
+<section id="下一步工作计划" class="slide level2">
+<h2>下一步工作计划</h2>
+<ol type="1">
+<li><p>试点教师完成总结与教案优化归档。</p></li>
+<li><p>师资补充：申请新老师加入。</p></li>
+<li><p>新学期筹备：开学前明确授课内容、人员、对象；建立备课制度与共享平台，激励机制。</p></li>
+<li><p>小程序对接：提前备课，明确需求后开发程序（信息老师主导）。</p></li>
+<li><p>特色活动：结合科技节策划编程成果展或赛项。</p></li>
+<li><p>评价体系：研讨制定过程性评价实施方案。</p></li>
+</ol>
+</section></section>
+<section id="致谢" class="title-slide slide level1">
+<h1>致谢</h1>
+
+</section>
+
+<section>
+<section id="参考资料" class="title-slide slide level1">
+<h1>参考资料</h1>
+
+</section>
+<section id="参考资料-1" class="slide level2">
+<h2>参考资料</h2>
+<ul>
+<li><p><a
+href="https://www.bilibili.com/video/BV1XK4y1S7aL/?spm_id_from=333.337.search-card.all.click&amp;vd_source=170e16556e854a3a9c6edef023c4a106">不插电的计算机科学配套视频</a></p></li>
+<li><p><a
+href="https://www.csunplugged.org/zh-hans/">csunplugged</a></p></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="libs/reveal.js-4.2.1/dist/reveal.js"></script>
+  
+  <!-- reveal.js plugins -->
+  <script src="libs/reveal.js-4.2.1/plugin/chalkboard/plugin.js"></script>
+  <script src="libs/reveal.js-4.2.1/plugin/customcontrols/plugin.js"></script>
+  
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Can be used to limit the contexts in which the slide number appears
+        showSlideNumber: 'all',
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+        // Push each slide change to the browser history
+        // Implies `hash: true`
+        history: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The display mode that will be used to show slides
+        display: 'block',
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+        height: 720,
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+
+        chalkboard: {
+          boardmarkerWidth: 4,
+          chalkWidth: 3,
+          readOnly: false,
+          theme: 'whiteboard',
+        },
+        customcontrols: {
+            controls: [
+            	{ icon: '<i class="fa fa-pen-square"></i>',
+            	  title: 'Toggle chalkboard (B)',
+            	  action: 'RevealChalkboard.toggleChalkboard();'
+            	},
+            	{ icon: '<i class="fa fa-pen"></i>',
+            	  title: 'Toggle notes canvas (C)',
+            	  action: 'RevealChalkboard.toggleNotesCanvas();'
+            	}
+            ]
+        },
+
+        // Optional reveal.js plugins
+        plugins: [
+          RevealChalkboard,
+          RevealCustomControls,
+        ]
+      });
+
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
